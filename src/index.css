@@ -4,33 +4,33 @@
 
 @layer base {
   :root {
-    --background: 250 50% 99%;
-    --foreground: 260 30% 12%;
+    --background: 40 33% 97%;
+    --foreground: 28 25% 14%;
 
     --card: 0 0% 100%;
-    --card-foreground: 260 30% 12%;
+    --card-foreground: 28 25% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 260 30% 12%;
+    --popover-foreground: 28 25% 14%;
 
-    --primary: 265 85% 58%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 25 55% 32%;
+    --primary-foreground: 40 33% 97%;
 
-    --secondary: 280 60% 96%;
-    --secondary-foreground: 265 60% 30%;
+    --secondary: 36 30% 92%;
+    --secondary-foreground: 28 30% 22%;
 
-    --muted: 270 30% 96%;
-    --muted-foreground: 260 12% 46%;
+    --muted: 36 25% 92%;
+    --muted-foreground: 30 12% 42%;
 
-    --accent: 14 100% 60%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 30 65% 52%;
+    --accent-foreground: 40 33% 97%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 265 85% 58%;
+    --ring: 25 55% 32%;
 
     --radius: 1rem;
 
@@ -106,25 +106,16 @@
     font-family: "Unbounded", sans-serif;
   }
   .text-gradient {
-    background: linear-gradient(120deg, hsl(265 85% 58%), hsl(14 100% 60%));
+    background: linear-gradient(120deg, hsl(25 55% 32%), hsl(30 65% 52%));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   .bg-mesh {
-    background-color: hsl(250 50% 99%);
+    background-color: hsl(40 33% 97%);
     background-image:
-      radial-gradient(at 0% 0%, hsla(265, 85%, 70%, 0.18) 0px, transparent 50%),
-      radial-gradient(
-        at 90% 10%,
-        hsla(14, 100%, 65%, 0.16) 0px,
-        transparent 50%
-      ),
-      radial-gradient(
-        at 50% 90%,
-        hsla(190, 90%, 60%, 0.12) 0px,
-        transparent 50%
-      );
+      radial-gradient(at 0% 0%, hsla(30, 60%, 60%, 0.12) 0px, transparent 50%),
+      radial-gradient(at 95% 5%, hsla(25, 55%, 45%, 0.1) 0px, transparent 50%);
   }
   .hover-lift {
     transition:
@@ -133,7 +124,7 @@
   }
   .hover-lift:hover {
     transform: translateY(-8px);
-    box-shadow: 0 24px 50px -20px hsla(265, 85%, 40%, 0.35);
+    box-shadow: 0 24px 50px -20px hsla(25, 55%, 25%, 0.3);
   }
 }
 
