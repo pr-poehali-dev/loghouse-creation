@@ -302,23 +302,50 @@ const FloorPlan = () => {
       {/* KIDS label */}
       <text x={LX / 2} y={H - 18} textAnchor="middle" fontSize="13" fill="#1d4ed8" fontWeight="800">ДЕТСКАЯ · ~14 м²</text>
 
-      {/* CENTER: кухонный гарнитур (вдоль верхней стены) */}
-      <rect x={LX + 8} y={wall + 4} width={RX - LX - 16} height={42} rx="5" fill="#d6d3d1" opacity="0.75" stroke="#a8a29e" strokeWidth="1.5" />
-      <rect x={LX + 50} y={wall + 6} width={30} height={30} rx="4" fill="#a8a29e" opacity="0.6" />
-      <circle cx={LX + 65} cy={wall + 21} r="8" fill="none" stroke="#78716c" strokeWidth="1.8" />
-      <text x={(LX + RX) / 2} y={wall + 32} textAnchor="middle" fontSize="9" fill="#44403c" fontWeight="700">КУХОННЫЙ ГАРНИТУР + МОЙКА</text>
+      {/* ── ПАНОРАМНЫЕ ОКНА — верхняя стена (напротив входа, вид на сад) ── */}
+      {/* Окно 1 */}
+      <rect x={LX + 20} y={0} width={80} height={wall * 2} fill="#bae6fd" opacity="0.9" stroke="#0284c7" strokeWidth="1.5" />
+      <line x1={LX + 60} y1={0} x2={LX + 60} y2={wall * 2} stroke="#0284c7" strokeWidth="1" opacity="0.5" />
+      {/* Окно 2 */}
+      <rect x={LX + 120} y={0} width={80} height={wall * 2} fill="#bae6fd" opacity="0.9" stroke="#0284c7" strokeWidth="1.5" />
+      <line x1={LX + 160} y1={0} x2={LX + 160} y2={wall * 2} stroke="#0284c7" strokeWidth="1" opacity="0.5" />
+      {/* Окно 3 */}
+      <rect x={LX + 220} y={0} width={80} height={wall * 2} fill="#bae6fd" opacity="0.9" stroke="#0284c7" strokeWidth="1.5" />
+      <line x1={LX + 260} y1={0} x2={LX + 260} y2={wall * 2} stroke="#0284c7" strokeWidth="1" opacity="0.5" />
+      {/* Подпись панорамных окон */}
+      <text x={(LX + RX) / 2} y={-6} textAnchor="middle" fontSize="9" fill="#0369a1" fontWeight="800">◀ ПАНОРАМНЫЕ ОКНА · ВИД НА САД ▶</text>
 
-      {/* CENTER: обеденный стол */}
-      <rect x={LX + 50} y={180} width={130} height={75} rx="8" fill="#e7e5e4" opacity="0.75" stroke="#a8a29e" strokeWidth="1.5" />
-      <text x={LX + 115} y={222} textAnchor="middle" fontSize="10" fill="#44403c" fontWeight="700">СТОЛ</text>
+      {/* CENTER: кухонный гарнитур — у входной (нижней) стены */}
+      {/* Гарнитур вдоль нижней стены Y ≈ H-wall-42 */}
+      <rect x={LX + 8} y={H - wall - 46} width={RX - LX - 16} height={42} rx="5" fill="#d6d3d1" opacity="0.75" stroke="#a8a29e" strokeWidth="1.5" />
+      {/* Мойка */}
+      <rect x={LX + 50} y={H - wall - 44} width={30} height={30} rx="4" fill="#a8a29e" opacity="0.6" />
+      <circle cx={LX + 65} cy={H - wall - 29} r="8" fill="none" stroke="#78716c" strokeWidth="1.8" />
+      {/* Плита */}
+      <rect x={LX + 150} y={H - wall - 44} width={36} height={30} rx="4" fill="#a8a29e" opacity="0.5" />
+      <circle cx={LX + 161} cy={H - wall - 35} r="5" fill="none" stroke="#78716c" strokeWidth="1.5" />
+      <circle cx={LX + 175} cy={H - wall - 35} r="5" fill="none" stroke="#78716c" strokeWidth="1.5" />
+      <circle cx={LX + 161} cy={H - wall - 21} r="5" fill="none" stroke="#78716c" strokeWidth="1.5" />
+      <circle cx={LX + 175} cy={H - wall - 21} r="5" fill="none" stroke="#78716c" strokeWidth="1.5" />
+      <text x={(LX + RX) / 2} y={H - wall - 52} textAnchor="middle" fontSize="8" fill="#44403c" fontWeight="700">КУХОННЫЙ ГАРНИТУР + МОЙКА + ПЛИТА</text>
+
+      {/* CENTER: обеденный стол — ближе к кухне */}
+      <rect x={LX + 55} y={H - wall - 160} width={120} height={70} rx="8" fill="#e7e5e4" opacity="0.75" stroke="#a8a29e" strokeWidth="1.5" />
+      <text x={LX + 115} y={H - wall - 120} textAnchor="middle" fontSize="10" fill="#44403c" fontWeight="700">СТОЛ</text>
       {/* стулья */}
-      {[LX + 50, LX + 180].map((x, i) => (
-        [195, 235].map((y, j) => <rect key={`${i}-${j}`} x={x - 16} y={y} width={32} height={15} rx="4" fill="#c4b5a5" opacity="0.7" />)
+      {[LX + 55, LX + 175].map((x, i) => (
+        [H - wall - 158, H - wall - 106].map((y, j) => <rect key={`c${i}-${j}`} x={x - 14} y={y} width={28} height={14} rx="4" fill="#c4b5a5" opacity="0.7" />)
       ))}
 
-      {/* CENTER: диван */}
-      <rect x={LX + 30} y={380} width={RX - LX - 60} height={55} rx="8" fill="#d6d3d1" opacity="0.7" stroke="#a8a29e" strokeWidth="1.5" />
-      <text x={(LX + RX) / 2} y={412} textAnchor="middle" fontSize="10" fill="#44403c" fontWeight="700">ДИВАН</text>
+      {/* CENTER: диван — лицом к панорамным окнам (у верхней стены) */}
+      <rect x={LX + 30} y={wall + 28} width={RX - LX - 60} height={55} rx="8" fill="#d6d3d1" opacity="0.7" stroke="#a8a29e" strokeWidth="1.5" />
+      <text x={(LX + RX) / 2} y={wall + 60} textAnchor="middle" fontSize="10" fill="#44403c" fontWeight="700">ДИВАН</text>
+      <text x={(LX + RX) / 2} y={wall + 73} textAnchor="middle" fontSize="7.5" fill="#78716c">← лицом к панорамным окнам →</text>
+
+      {/* Стрелка: вход → панорамные окна */}
+      <line x1={(LX + RX) / 2} y1={H - 30} x2={(LX + RX) / 2} y2={100} stroke="#16a34a" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.5" />
+      <polygon points={`${(LX + RX) / 2},95 ${(LX + RX) / 2 - 6},108 ${(LX + RX) / 2 + 6},108`} fill="#16a34a" opacity="0.5" />
+      <text x={(LX + RX) / 2 + 8} y={300} fontSize="8" fill="#16a34a" fontWeight="600" transform={`rotate(-90, ${(LX + RX) / 2 + 8}, 300)`}>взгляд от входа</text>
 
       {/* CENTER label */}
       <text x={(LX + RX) / 2} y={H - 14} textAnchor="middle" fontSize="12" fill="#57534e" fontWeight="800">КУХНЯ-ГОСТИНАЯ · ~24 м²</text>
