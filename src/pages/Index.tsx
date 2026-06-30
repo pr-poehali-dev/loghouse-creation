@@ -91,7 +91,7 @@ const RIGHT_ROOMS = [
     color: 'bg-amber-50 border-amber-200',
     iconColor: 'text-amber-600',
     badge: 'bg-amber-100 text-amber-700',
-    desc: 'В глубине крыла, выход наружу через тамбур бойлерной. Дверь в сауну — внутрь, плотная, с уплотнителем. Рядом — дверь в санузел для душа после парилки.',
+    desc: 'Вход в сауну только через тамбур-предбанник — он работает как тепловой буфер. Горячий воздух и запах не проникают в жилые комнаты. Между баней и домом — утеплённая стена 100 мм минваты.',
     image: SAUNA_IMG,
   },
   {
@@ -101,7 +101,7 @@ const RIGHT_ROOMS = [
     color: 'bg-teal-50 border-teal-200',
     iconColor: 'text-teal-600',
     badge: 'bg-teal-100 text-teal-700',
-    desc: 'Между баней и гостиной — доступен и из дома, и из бани. Два входа: один из гостиной/коридора, один из предбанника. Вентиляция обязательна.',
+    desc: 'Проходной санузел с двумя дверями: одна из гостиной (повседневный доступ), вторая из тамбура-предбанника (после парилки). Не нужно идти через баню — заходишь в санузел напрямую из коридора.',
     image: null,
   },
   {
@@ -122,226 +122,278 @@ const MATERIALS = [
   { icon: 'Trees', name: 'Брус лафет', where: 'Боковые крылья', benefits: ['Экологичность', 'Тёплые стены', 'Красивая текстура'] },
 ];
 
-// SVG Floor Plan Component
+// SVG Floor Plan Component — updated: pass-through WC, tambour, wardrobes
 const FloorPlan = () => {
-  const W = 900;  // total width
-  const H = 480;  // total height
+  const W = 960;
+  const H = 520;
   const wall = 10;
-  const doorW = 36;
-  const arcR = 34;
+  const dW = 38; // door gap width
+  const aR = 36; // arc radius
 
-  // Columns X positions (3 sections × 300px each)
-  // Left wing: 0–300, Center: 300–600, Right: 600–900
+  // X zones: Left 0–320 | Center 320–640 | Right 640–960
+  // Y: top wall=0, bottom=H
+  // Left wing split Y: master 0–260, kids 260–H
+  // Right wing columns: tambour 640–730 | wc 730–830 | sauna 830–960
+  //   bottom half of right: boiler 640–960 y=310–H
+
+  const LX = 320; // left-center divider x
+  const RX = 640; // center-right divider x
+  const TX = 730; // tambour-wc divider
+  const SX = 830; // wc-sauna divider
+  const MY = 260; // master-kids divider y
+  const BY = 310; // boiler top y
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ fontFamily: 'Golos Text, sans-serif' }}>
       <defs>
         <pattern id="hatch-sibit" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
-          <line x1="0" y1="0" x2="0" y2="10" stroke="#a8a29e" strokeWidth="1.5" opacity="0.35" />
+          <line x1="0" y1="0" x2="0" y2="10" stroke="#a8a29e" strokeWidth="1.5" opacity="0.3" />
         </pattern>
-        <pattern id="hatch-lafet" patternUnits="userSpaceOnUse" width="12" height="12">
-          <line x1="0" y1="0" x2="12" y2="0" stroke="#b45309" strokeWidth="1.2" opacity="0.2" />
-          <line x1="0" y1="6" x2="12" y2="6" stroke="#b45309" strokeWidth="1.2" opacity="0.2" />
+        <pattern id="hatch-lafet" patternUnits="userSpaceOnUse" width="14" height="14">
+          <line x1="0" y1="0" x2="14" y2="0" stroke="#b45309" strokeWidth="1.2" opacity="0.18" />
+          <line x1="0" y1="7" x2="14" y2="7" stroke="#b45309" strokeWidth="1.2" opacity="0.18" />
         </pattern>
-        <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.10" />
-        </filter>
       </defs>
 
-      {/* ── BACKGROUNDS ── */}
-      {/* Left wing */}
-      <rect x={wall} y={wall} width={300 - wall} height={H - wall * 2} fill="#fff7ed" rx="4" />
-      <rect x={wall} y={wall} width={300 - wall} height={H - wall * 2} fill="url(#hatch-lafet)" rx="4" />
-      {/* Center */}
-      <rect x={300} y={wall} width={300} height={H - wall * 2} fill="#f5f5f4" rx="4" />
-      <rect x={300} y={wall} width={300} height={H - wall * 2} fill="url(#hatch-sibit)" rx="4" />
-      {/* Right wing */}
-      <rect x={600} y={wall} width={300 - wall} height={H - wall * 2} fill="#fff7ed" rx="4" />
-      <rect x={600} y={wall} width={300 - wall} height={H - wall * 2} fill="url(#hatch-lafet)" rx="4" />
+      {/* ── ROOM FILLS ── */}
+      {/* Master bedroom */}
+      <rect x={wall} y={wall} width={LX - wall} height={MY - wall} fill="#fff1f2" />
+      <rect x={wall} y={wall} width={LX - wall} height={MY - wall} fill="url(#hatch-lafet)" />
+      {/* Kids bedroom */}
+      <rect x={wall} y={MY} width={LX - wall} height={H - MY - wall} fill="#eff6ff" />
+      <rect x={wall} y={MY} width={LX - wall} height={H - MY - wall} fill="url(#hatch-lafet)" />
+      {/* Center kitchen-living */}
+      <rect x={LX} y={wall} width={RX - LX} height={H - wall * 2} fill="#f5f5f4" />
+      <rect x={LX} y={wall} width={RX - LX} height={H - wall * 2} fill="url(#hatch-sibit)" />
+      {/* Tambour/предбанник */}
+      <rect x={RX} y={wall} width={TX - RX} height={BY - wall} fill="#fef9c3" />
+      {/* WC/Shower — проходной санузел */}
+      <rect x={TX} y={wall} width={SX - TX} height={BY - wall} fill="#ccfbf1" />
+      {/* Sauna */}
+      <rect x={SX} y={wall} width={W - SX - wall} height={BY - wall} fill="#fef3c7" />
+      <rect x={SX} y={wall} width={W - SX - wall} height={BY - wall} fill="url(#hatch-lafet)" />
+      {/* Boiler room (full width right wing bottom) */}
+      <rect x={RX} y={BY} width={W - RX - wall} height={H - BY - wall} fill="#f1f5f9" />
 
       {/* ── OUTER WALLS ── */}
-      <rect x={0} y={0} width={W} height={H} fill="none" stroke="#292524" strokeWidth={wall * 2} rx="6" />
+      <rect x={0} y={0} width={W} height={H} fill="none" stroke="#292524" strokeWidth={wall * 2} rx="4" />
 
-      {/* ── INNER WALLS (section dividers) ── */}
-      {/* Left-Center divider */}
-      <rect x={296} y={0} width={wall * 1.6} height={H} fill="#292524" />
-      {/* Center-Right divider */}
-      <rect x={604} y={0} width={wall * 1.6} height={H} fill="#292524" />
+      {/* ── SECTION DIVIDERS ── */}
+      {/* Left–Center full height */}
+      <rect x={LX - 1} y={0} width={wall + 2} height={H} fill="#44403c" />
+      {/* Center–Right full height */}
+      <rect x={RX - 1} y={0} width={wall + 2} height={H} fill="#44403c" />
 
-      {/* ── LEFT WING: internal wall between master & kids ── */}
-      {/* Wall: y=0 to y=240 (master top half), door gap at y=190–226 */}
-      <rect x={wall} y={wall} width={wall * 1.4} height={180} fill="#78716c" />
-      <rect x={wall} y={wall + 180 + doorW} width={wall * 1.4} height={H / 2 - wall - 180 - doorW} fill="#78716c" />
-      {/* Door arc - master bedroom door */}
-      <path d={`M ${wall + wall * 1.4} ${wall + 180} A ${arcR} ${arcR} 0 0 1 ${wall + wall * 1.4 + arcR} ${wall + 180 + arcR}`} fill="none" stroke="#b45309" strokeWidth="1.8" strokeDasharray="4 2" />
-      <line x1={wall + wall * 1.4} y1={wall + 180} x2={wall + wall * 1.4 + arcR} y2={wall + 180} stroke="#b45309" strokeWidth="2" />
+      {/* ── LEFT WING WALLS ── */}
+      {/* Master / Kids horizontal divider */}
+      <rect x={wall} y={MY - wall / 2} width={LX - wall * 2} height={wall} fill="#78716c" />
+      {/* Left inner vertical wall (guestroom side) */}
+      {/* Master wardrobe wall: vertical stub at x=220 from top */}
+      <rect x={220} y={wall} width={wall} height={110} fill="#78716c" />
+      {/* Kids wardrobe wall: vertical stub at x=220 from MY */}
+      <rect x={220} y={MY + wall} width={wall} height={100} fill="#78716c" />
 
-      {/* Wall: bottom half divider (between master and kids) at mid-horizontal */}
-      <rect x={wall} y={H / 2} width={wall * 1.4} height={H / 2 - wall} fill="#78716c" />
-      {/* kids door at bottom */}
-      <path d={`M ${wall + wall * 1.4} ${H / 2 + 20 + doorW} A ${arcR} ${arcR} 0 0 0 ${wall + wall * 1.4 + arcR} ${H / 2 + 20}`} fill="none" stroke="#0369a1" strokeWidth="1.8" strokeDasharray="4 2" />
-      <line x1={wall + wall * 1.4} y1={H / 2 + 20} x2={wall + wall * 1.4 + arcR} y2={H / 2 + 20} stroke="#0369a1" strokeWidth="2" />
+      {/* ── RIGHT WING INTERNAL WALLS ── */}
+      {/* Tambour | WC vertical */}
+      <rect x={TX - 1} y={wall} width={wall} height={BY - wall} fill="#78716c" />
+      {/* WC | Sauna vertical */}
+      <rect x={SX - 1} y={wall} width={wall} height={BY - wall} fill="#78716c" />
+      {/* Boiler horizontal */}
+      <rect x={RX} y={BY - 1} width={W - RX - wall} height={wall} fill="#78716c" />
+      {/* Tambour-boiler: gap — no wall between tambour floor and boiler (open corridor) */}
 
-      {/* Horizontal divider in left wing (between master & kids) */}
-      <rect x={wall * 1.4 + wall} y={H / 2 - wall / 2} width={296 - wall * 2.4} height={wall} fill="#78716c" />
+      {/* ── DOORS ── */}
 
-      {/* ── RIGHT WING: internal walls ── */}
-      {/* Sauna / Shower divider vertical at x=720 */}
-      <rect x={718} y={wall} width={wall} height={300} fill="#78716c" />
-      {/* Boiler room horizontal at y=300 in right wing */}
-      <rect x={wall + 604} y={300} width={276 - wall} height={wall} fill="#78716c" />
+      {/* 1. Master bedroom → гостиная (через LX, y≈100) */}
+      <rect x={LX - 1} y={100} width={wall + 2} height={dW} fill="#f5f5f4" />
+      <path d={`M ${LX} ${100} A ${aR} ${aR} 0 0 0 ${LX - aR} ${100 + aR}`} fill="none" stroke="#be123c" strokeWidth="2" strokeDasharray="5 3" />
+      <line x1={LX} y1={100} x2={LX - aR} y2={100} stroke="#be123c" strokeWidth="2.2" />
+      <text x={LX - aR / 2 - 4} y={95} fontSize="8" fill="#be123c" fontWeight="700" textAnchor="middle">дверь</text>
 
-      {/* Shower door (right): gap at sauna-shower wall */}
-      <rect x={718} y={wall + 140} width={wall} height={doorW} fill="#fff7ed" />
-      <path d={`M 718 ${wall + 140} A ${arcR} ${arcR} 0 0 0 ${718 - arcR} ${wall + 140 + arcR}`} fill="none" stroke="#0d9488" strokeWidth="1.8" strokeDasharray="4 2" />
-      <line x1={718} y1={wall + 140} x2={718 - arcR} y2={wall + 140} stroke="#0d9488" strokeWidth="2" />
+      {/* 2. Kids bedroom → гостиная (через LX, y≈360) */}
+      <rect x={LX - 1} y={360} width={wall + 2} height={dW} fill="#f5f5f4" />
+      <path d={`M ${LX} ${360} A ${aR} ${aR} 0 0 0 ${LX - aR} ${360 + aR}`} fill="none" stroke="#1d4ed8" strokeWidth="2" strokeDasharray="5 3" />
+      <line x1={LX} y1={360} x2={LX - aR} y2={360} stroke="#1d4ed8" strokeWidth="2.2" />
 
-      {/* Boiler room door: in horizontal wall at y=300, gap at x=650–686 */}
-      <rect x={650} y={300} width={doorW} height={wall} fill="#fff7ed" />
-      <path d={`M 650 ${300 + wall} A ${arcR} ${arcR} 0 0 1 ${650 + arcR} ${300 + wall - arcR}`} fill="none" stroke="#57534e" strokeWidth="1.8" strokeDasharray="4 2" />
-      <line x1={650} y1={300 + wall} x2={650} y2={300 + wall - arcR} stroke="#57534e" strokeWidth="2" />
+      {/* 3. Гостиная → Тамбур (через RX, y≈120) */}
+      <rect x={RX - 1} y={120} width={wall + 2} height={dW} fill="#fef9c3" />
+      <path d={`M ${RX + wall} ${120} A ${aR} ${aR} 0 0 1 ${RX + wall + aR} ${120 + aR}`} fill="none" stroke="#92400e" strokeWidth="2" strokeDasharray="5 3" />
+      <line x1={RX + wall} y1={120} x2={RX + wall + aR} y2={120} stroke="#92400e" strokeWidth="2.2" />
 
-      {/* ── SECTION DOORS (between wings and center) ── */}
+      {/* 4. Гостиная → Санузел напрямую (через RX, y≈210) — ВХОД ИЗ ДОМА */}
+      <rect x={RX - 1} y={215} width={wall + 2} height={dW} fill="#ccfbf1" />
+      <path d={`M ${RX + wall} ${215} A ${aR} ${aR} 0 0 1 ${RX + wall + aR} ${215 + aR}`} fill="none" stroke="#0d9488" strokeWidth="2" strokeDasharray="5 3" />
+      <line x1={RX + wall} y1={215} x2={RX + wall + aR} y2={215} stroke="#0d9488" strokeWidth="2.2" />
+      {/* label */}
+      <text x={RX + wall + aR + 2} y={228} fontSize="8" fill="#0d9488" fontWeight="800">← из дома</text>
 
-      {/* Left wing → Center (top — master to living): gap in left-center divider */}
-      <rect x={296} y={120} width={wall * 1.6} height={doorW + 4} fill="#f5f5f4" />
-      <path d={`M 296 ${120} A ${arcR} ${arcR} 0 0 0 ${296 - arcR} ${120 + arcR}`} fill="none" stroke="#b45309" strokeWidth="1.8" strokeDasharray="4 2" />
-      <line x1={296} y1={120} x2={296 - arcR} y2={120} stroke="#b45309" strokeWidth="2" />
+      {/* 5. Тамбур → Санузел (через TX, y≈150) — после парилки */}
+      <rect x={TX - 1} y={155} width={wall} height={dW} fill="#ccfbf1" />
+      <path d={`M ${TX} ${155} A ${aR} ${aR} 0 0 1 ${TX + aR} ${155 + aR}`} fill="none" stroke="#0d9488" strokeWidth="2" strokeDasharray="5 3" />
+      <line x1={TX} y1={155} x2={TX + aR} y2={155} stroke="#0d9488" strokeWidth="2.2" />
+      {/* label */}
+      <text x={TX + 4} y={150} fontSize="8" fill="#0d9488" fontWeight="800">← из бани</text>
 
-      {/* Left wing → Center (bottom — kids to living) */}
-      <rect x={296} y={310} width={wall * 1.6} height={doorW + 4} fill="#f5f5f4" />
-      <path d={`M 296 ${310} A ${arcR} ${arcR} 0 0 0 ${296 - arcR} ${310 + arcR}`} fill="none" stroke="#0369a1" strokeWidth="1.8" strokeDasharray="4 2" />
-      <line x1={296} y1={310} x2={296 - arcR} y2={310} stroke="#0369a1" strokeWidth="2" />
+      {/* 6. Тамбур → Сауна (через SX, y≈80) */}
+      <rect x={SX - 1} y={75} width={wall} height={dW} fill="#fef3c7" />
+      <path d={`M ${SX} ${75} A ${aR} ${aR} 0 0 0 ${SX - aR} ${75 + aR}`} fill="none" stroke="#d97706" strokeWidth="2" strokeDasharray="5 3" />
+      <line x1={SX} y1={75} x2={SX - aR} y2={75} stroke="#d97706" strokeWidth="2.2" />
 
-      {/* Center → Right wing (top — living to sauna area) */}
-      <rect x={604} y={140} width={wall * 1.6} height={doorW + 4} fill="#fff7ed" />
-      <path d={`M ${604 + wall * 1.6} ${140} A ${arcR} ${arcR} 0 0 1 ${604 + wall * 1.6 + arcR} ${140 + arcR}`} fill="none" stroke="#d97706" strokeWidth="1.8" strokeDasharray="4 2" />
-      <line x1={604 + wall * 1.6} y1={140} x2={604 + wall * 1.6 + arcR} y2={140} stroke="#d97706" strokeWidth="2" />
+      {/* 7. Тамбур → Бойлерная (вниз, через BY) */}
+      <rect x={RX + 20} y={BY - 1} width={dW} height={wall} fill="#f1f5f9" />
+      <path d={`M ${RX + 20} ${BY + wall} A ${aR} ${aR} 0 0 0 ${RX + 20 + aR} ${BY + wall - aR}`} fill="none" stroke="#64748b" strokeWidth="2" strokeDasharray="5 3" />
+      <line x1={RX + 20} y1={BY + wall} x2={RX + 20} y2={BY + wall - aR} stroke="#64748b" strokeWidth="2.2" />
 
-      {/* Center → Right wing (bottom — living to shower/wc) */}
-      <rect x={604} y={310} width={wall * 1.6} height={doorW + 4} fill="#fff7ed" />
-      <path d={`M ${604 + wall * 1.6} ${310} A ${arcR} ${arcR} 0 0 1 ${604 + wall * 1.6 + arcR} ${310 + arcR}`} fill="none" stroke="#0d9488" strokeWidth="1.8" strokeDasharray="4 2" />
-      <line x1={604 + wall * 1.6} y1={310} x2={604 + wall * 1.6 + arcR} y2={310} stroke="#0d9488" strokeWidth="2" />
+      {/* 8. Главный вход — центр снизу */}
+      <rect x={450} y={H - wall * 2} width={dW + 12} height={wall * 2} fill="#f5f5f4" />
+      <path d={`M 450 ${H - wall * 2} A 48 48 0 0 0 ${450 + 48} ${H - wall * 2 - 48}`} fill="none" stroke="#292524" strokeWidth="2.5" strokeDasharray="6 3" />
+      <line x1={450} y1={H - wall * 2} x2={450 + 48} y2={H - wall * 2} stroke="#292524" strokeWidth="2.8" />
+      <text x={472} y={H - 2} textAnchor="middle" fontSize="11" fill="#44403c" fontWeight="700">ГЛАВНЫЙ ВХОД</text>
 
-      {/* ── EXTERIOR DOORS ── */}
-      {/* Main entrance — center bottom */}
-      <rect x={410} y={H - wall * 2} width={doorW + 20} height={wall * 2} fill="#f5f5f4" />
-      <path d={`M 410 ${H - wall * 2} A 50 50 0 0 0 ${410 + 50} ${H - wall * 2 - 50}`} fill="none" stroke="#292524" strokeWidth="2" strokeDasharray="5 3" />
-      <line x1={410} y1={H - wall * 2} x2={410 + 50} y2={H - wall * 2} stroke="#292524" strokeWidth="2.5" />
-      <text x={432} y={H - 2} textAnchor="middle" fontSize="11" fill="#78716c" fontWeight="600">ВХОД</text>
+      {/* 9. Сауна — выход на улицу (правый фасад) */}
+      <rect x={W - wall * 2} y={55} width={wall * 2} height={dW + 6} fill="#fef3c7" />
+      <path d={`M ${W - wall * 2} ${55} A ${aR} ${aR} 0 0 0 ${W - wall * 2 - aR} ${55 + aR}`} fill="none" stroke="#d97706" strokeWidth="2" strokeDasharray="5 3" />
+      <line x1={W - wall * 2} y1={55} x2={W - wall * 2} y2={55 + aR} stroke="#d97706" strokeWidth="2.2" />
+      <text x={W - 6} y={50} textAnchor="end" fontSize="8" fill="#d97706" fontWeight="700">выход↓</text>
 
-      {/* Boiler exterior door — right side */}
-      <rect x={W - wall * 2} y={360} width={wall * 2} height={doorW + 8} fill="#fff7ed" />
-      <path d={`M ${W - wall * 2} ${360} A ${arcR} ${arcR} 0 0 0 ${W - wall * 2 - arcR} ${360 + arcR}`} fill="none" stroke="#57534e" strokeWidth="1.8" strokeDasharray="4 2" />
-      <line x1={W - wall * 2} y1={360} x2={W - wall * 2} y2={360 + arcR} stroke="#57534e" strokeWidth="2" />
+      {/* 10. Бойлерная — выход на улицу (правый фасад снизу) */}
+      <rect x={W - wall * 2} y={370} width={wall * 2} height={dW + 6} fill="#f1f5f9" />
+      <path d={`M ${W - wall * 2} ${370} A ${aR} ${aR} 0 0 0 ${W - wall * 2 - aR} ${370 + aR}`} fill="none" stroke="#64748b" strokeWidth="2" strokeDasharray="5 3" />
+      <line x1={W - wall * 2} y1={370} x2={W - wall * 2} y2={370 + aR} stroke="#64748b" strokeWidth="2.2" />
 
-      {/* Sauna exterior door — right top */}
-      <rect x={W - wall * 2} y={60} width={wall * 2} height={doorW + 8} fill="#fff7ed" />
-      <path d={`M ${W - wall * 2} ${60} A ${arcR} ${arcR} 0 0 0 ${W - wall * 2 - arcR} ${60 + arcR}`} fill="none" stroke="#d97706" strokeWidth="1.8" strokeDasharray="4 2" />
-      <line x1={W - wall * 2} y1={60} x2={W - wall * 2} y2={60 + arcR} stroke="#d97706" strokeWidth="2" />
+      {/* ── FURNITURE ── */}
 
-      {/* ── FURNITURE (simplified) ── */}
+      {/* MASTER: кровать */}
+      <rect x={25} y={20} width={100} height={65} rx="6" fill="#fda4af" opacity="0.65" stroke="#f43f5e" strokeWidth="1.5" />
+      <rect x={25} y={20} width={100} height={20} rx="4" fill="#f43f5e" opacity="0.5" />
+      <text x={75} y={60} textAnchor="middle" fontSize="9" fill="#9f1239" fontWeight="700">КРОВАТЬ 160×200</text>
 
-      {/* MASTER BED (top-left) */}
-      <rect x={30} y={25} width={90} height={60} rx="6" fill="#fda4af" opacity="0.6" stroke="#f43f5e" strokeWidth="1.5" />
-      <rect x={30} y={25} width={90} height={18} rx="4" fill="#f43f5e" opacity="0.5" />
-      <text x={75} y={62} textAnchor="middle" fontSize="9" fill="#9f1239" fontWeight="700">КРОВАТЬ</text>
+      {/* MASTER: гардероб в нише (слева от кровати, x=25–220, y=wall–110) */}
+      <rect x={25} y={90} width={190} height={38} rx="4" fill="#fed7aa" opacity="0.8" stroke="#ea580c" strokeWidth="1.2" />
+      {/* двери гардероба — штриховые линии */}
+      <line x1={88} y1={90} x2={88} y2={128} stroke="#ea580c" strokeWidth="1" strokeDasharray="3 2" opacity="0.7" />
+      <line x1={152} y1={90} x2={152} y2={128} stroke="#ea580c" strokeWidth="1" strokeDasharray="3 2" opacity="0.7" />
+      <text x={110} y={113} textAnchor="middle" fontSize="9" fill="#9a3412" fontWeight="700">ГАРДЕРОБ</text>
+      <text x={110} y={124} textAnchor="middle" fontSize="7.5" fill="#c2410c" opacity="0.8">3 секции · ~2 м</text>
 
-      {/* KIDS BED (bottom-left) */}
-      <rect x={30} y={H / 2 + 30} width={75} height={50} rx="6" fill="#93c5fd" opacity="0.6" stroke="#3b82f6" strokeWidth="1.5" />
-      <rect x={30} y={H / 2 + 30} width={75} height={15} rx="4" fill="#3b82f6" opacity="0.5" />
-      <text x={67} y={H / 2 + 64} textAnchor="middle" fontSize="9" fill="#1e3a8a" fontWeight="700">КРОВАТЬ</text>
+      {/* MASTER: тумбочки */}
+      <rect x={130} y={20} width={22} height={22} rx="3" fill="#fcd34d" opacity="0.6" />
+      <rect x={25} y={20} width={0} height={22} rx="3" fill="#fcd34d" opacity="0.6" />
 
-      {/* WARDROBE master */}
-      <rect x={200} y={25} width={85} height={30} rx="4" fill="#fed7aa" opacity="0.7" stroke="#ea580c" strokeWidth="1" />
-      <text x={242} y={44} textAnchor="middle" fontSize="8" fill="#9a3412">ГАРДЕРОБ</text>
+      {/* MASTER label */}
+      <text x={LX / 2} y={MY - 18} textAnchor="middle" fontSize="13" fill="#be123c" fontWeight="800">МАСТЕР-СПАЛЬНЯ · ~16 м²</text>
 
-      {/* KITCHEN COUNTER (center top) */}
-      <rect x={315} y={20} width={180} height={35} rx="6" fill="#d6d3d1" opacity="0.7" stroke="#a8a29e" strokeWidth="1.5" />
-      <text x={405} y={43} textAnchor="middle" fontSize="9" fill="#44403c" fontWeight="700">КУХОННЫЙ ГАРНИТУР</text>
-      {/* Sink */}
-      <rect x={360} y={22} width={28} height={28} rx="4" fill="#a8a29e" opacity="0.6" />
-      <circle cx={374} cy={36} r="7" fill="none" stroke="#78716c" strokeWidth="1.5" />
+      {/* KIDS: кровать */}
+      <rect x={25} y={MY + 14} width={85} height={55} rx="6" fill="#93c5fd" opacity="0.65" stroke="#3b82f6" strokeWidth="1.5" />
+      <rect x={25} y={MY + 14} width={85} height={18} rx="4" fill="#3b82f6" opacity="0.5" />
+      <text x={67} y={MY + 49} textAnchor="middle" fontSize="9" fill="#1e3a8a" fontWeight="700">КРОВАТЬ</text>
 
-      {/* DINING TABLE (center middle) */}
-      <rect x={340} y={170} width={120} height={70} rx="8" fill="#e7e5e4" opacity="0.7" stroke="#a8a29e" strokeWidth="1.5" />
-      <text x={400} y={210} textAnchor="middle" fontSize="9" fill="#44403c" fontWeight="700">СТОЛ</text>
-      {/* chairs */}
-      {[340, 420].map(x => [155, 220].map(y => (
-        <rect key={`${x}-${y}`} x={x - 14} y={y} width={28} height={16} rx="4" fill="#c4b5a5" opacity="0.7" />
-      )))}
+      {/* KIDS: письменный стол */}
+      <rect x={130} y={MY + 14} width={80} height={35} rx="4" fill="#bae6fd" opacity="0.7" stroke="#0284c7" strokeWidth="1" />
+      <text x={170} y={MY + 36} textAnchor="middle" fontSize="8" fill="#075985" fontWeight="700">СТОЛ</text>
 
-      {/* SOFA (center bottom) */}
-      <rect x={320} y={350} width={160} height={50} rx="8" fill="#d6d3d1" opacity="0.7" stroke="#a8a29e" strokeWidth="1.5" />
-      <text x={400} y={380} textAnchor="middle" fontSize="9" fill="#44403c" fontWeight="700">ДИВАН</text>
+      {/* KIDS: гардероб */}
+      <rect x={25} y={MY + 80} width={185} height={35} rx="4" fill="#bfdbfe" opacity="0.8" stroke="#3b82f6" strokeWidth="1.2" />
+      <line x1={87} y1={MY + 80} x2={87} y2={MY + 115} stroke="#3b82f6" strokeWidth="1" strokeDasharray="3 2" opacity="0.7" />
+      <line x1={149} y1={MY + 80} x2={149} y2={MY + 115} stroke="#3b82f6" strokeWidth="1" strokeDasharray="3 2" opacity="0.7" />
+      <text x={110} y={MY + 102} textAnchor="middle" fontSize="9" fill="#1d4ed8" fontWeight="700">ГАРДЕРОБ</text>
+      <text x={110} y={MY + 113} textAnchor="middle" fontSize="7.5" fill="#1d4ed8" opacity="0.8">2 секции · ~1.8 м</text>
 
-      {/* SAUNA BENCH (right wing top) */}
-      <rect x={625} y={20} width={75} height={110} rx="6" fill="#fde68a" opacity="0.6" stroke="#d97706" strokeWidth="1.5" />
-      <rect x={625} y={20} width={75} height={35} rx="4" fill="#fbbf24" opacity="0.5" />
-      <rect x={625} y={60} width={75} height={35} rx="4" fill="#fbbf24" opacity="0.4" />
-      <text x={662} y={95} textAnchor="middle" fontSize="9" fill="#92400e" fontWeight="700">ПОЛКИ</text>
-      {/* stove */}
-      <rect x={640} y={130} width={35} height={35} rx="6" fill="#ef4444" opacity="0.5" stroke="#dc2626" strokeWidth="1.5" />
-      <text x={657} y={152} textAnchor="middle" fontSize="8" fill="#7f1d1d" fontWeight="700">ПЕЧЬ</text>
+      {/* KIDS label */}
+      <text x={LX / 2} y={H - 18} textAnchor="middle" fontSize="13" fill="#1d4ed8" fontWeight="800">ДЕТСКАЯ · ~14 м²</text>
 
-      {/* SHOWER (right center) */}
-      <rect x={730} y={20} width={145} height={110} rx="6" fill="#99f6e4" opacity="0.5" stroke="#0d9488" strokeWidth="1.5" />
-      <circle cx={800} cy={75} r="22" fill="none" stroke="#0d9488" strokeWidth="2" strokeDasharray="5 3" />
-      <text x={800} y={79} textAnchor="middle" fontSize="9" fill="#0f766e" fontWeight="700">ДУШ</text>
-      {/* toilet */}
-      <ellipse cx={756} cy={135} rx="20" ry="26" fill="#99f6e4" opacity="0.6" stroke="#0d9488" strokeWidth="1.5" />
-      <text x={756} y={139} textAnchor="middle" fontSize="8" fill="#0f766e" fontWeight="700">WC</text>
+      {/* CENTER: кухонный гарнитур (вдоль верхней стены) */}
+      <rect x={LX + 8} y={wall + 4} width={RX - LX - 16} height={42} rx="5" fill="#d6d3d1" opacity="0.75" stroke="#a8a29e" strokeWidth="1.5" />
+      <rect x={LX + 50} y={wall + 6} width={30} height={30} rx="4" fill="#a8a29e" opacity="0.6" />
+      <circle cx={LX + 65} cy={wall + 21} r="8" fill="none" stroke="#78716c" strokeWidth="1.8" />
+      <text x={(LX + RX) / 2} y={wall + 32} textAnchor="middle" fontSize="9" fill="#44403c" fontWeight="700">КУХОННЫЙ ГАРНИТУР + МОЙКА</text>
 
-      {/* BOILER ROOM (right bottom) */}
-      <rect x={625} y={320} width={250} height={130} rx="4" fill="#e7e5e4" opacity="0.5" />
-      {/* boiler */}
-      <rect x={645} y={335} width={50} height={70} rx="8" fill="#94a3b8" opacity="0.7" stroke="#64748b" strokeWidth="1.5" />
-      <text x={670} y={375} textAnchor="middle" fontSize="8" fill="#1e293b" fontWeight="700">КОТЁЛ</text>
-      {/* water heater */}
-      <rect x={710} y={340} width={40} height={55} rx="8" fill="#93c5fd" opacity="0.6" stroke="#3b82f6" strokeWidth="1.5" />
-      <text x={730} y={371} textAnchor="middle" fontSize="8" fill="#1e3a8a" fontWeight="700">БОЙЛЕР</text>
+      {/* CENTER: обеденный стол */}
+      <rect x={LX + 50} y={180} width={130} height={75} rx="8" fill="#e7e5e4" opacity="0.75" stroke="#a8a29e" strokeWidth="1.5" />
+      <text x={LX + 115} y={222} textAnchor="middle" fontSize="10" fill="#44403c" fontWeight="700">СТОЛ</text>
+      {/* стулья */}
+      {[LX + 50, LX + 180].map((x, i) => (
+        [195, 235].map((y, j) => <rect key={`${i}-${j}`} x={x - 16} y={y} width={32} height={15} rx="4" fill="#c4b5a5" opacity="0.7" />)
+      ))}
 
-      {/* ── ROOM LABELS ── */}
-      <text x={155} y={H / 2 - 20} textAnchor="middle" fontSize="13" fill="#b45309" fontWeight="800">МАСТЕР-СПАЛЬНЯ</text>
-      <text x={155} y={H / 2 - 6} textAnchor="middle" fontSize="10" fill="#b45309" opacity="0.7">~14 м²</text>
+      {/* CENTER: диван */}
+      <rect x={LX + 30} y={380} width={RX - LX - 60} height={55} rx="8" fill="#d6d3d1" opacity="0.7" stroke="#a8a29e" strokeWidth="1.5" />
+      <text x={(LX + RX) / 2} y={412} textAnchor="middle" fontSize="10" fill="#44403c" fontWeight="700">ДИВАН</text>
 
-      <text x={155} y={H - 40} textAnchor="middle" fontSize="13" fill="#0369a1" fontWeight="800">ДЕТСКАЯ</text>
-      <text x={155} y={H - 26} textAnchor="middle" fontSize="10" fill="#0369a1" opacity="0.7">~10 м²</text>
+      {/* CENTER label */}
+      <text x={(LX + RX) / 2} y={H - 14} textAnchor="middle" fontSize="12" fill="#57534e" fontWeight="800">КУХНЯ-ГОСТИНАЯ · ~24 м²</text>
 
-      <text x={400} y={H - 14} textAnchor="middle" fontSize="13" fill="#57534e" fontWeight="800">КУХНЯ-ГОСТИНАЯ · ~24 м²</text>
+      {/* TAMBOUR: предбанник */}
+      <text x={(RX + TX) / 2} y={80} textAnchor="middle" fontSize="9" fill="#92400e" fontWeight="800">ТАМБУР</text>
+      <text x={(RX + TX) / 2} y={92} textAnchor="middle" fontSize="8" fill="#b45309" opacity="0.8">предбанник</text>
+      {/* вешалка */}
+      <rect x={RX + 8} y={110} width={TX - RX - 16} height={20} rx="3" fill="#fbbf24" opacity="0.5" stroke="#d97706" strokeWidth="1" />
+      <text x={(RX + TX) / 2} y={124} textAnchor="middle" fontSize="7.5" fill="#92400e">вешалка</text>
+      {/* теплоизоляция указатель */}
+      <rect x={RX + 4} y={wall + 2} width={TX - RX - 8} height={8} rx="2" fill="#fde68a" opacity="0.9" />
+      <text x={(RX + TX) / 2} y={wall + 9} textAnchor="middle" fontSize="6.5" fill="#78350f" fontWeight="700">🔥 утеплённая стена</text>
 
-      <text x={662} y={175} textAnchor="middle" fontSize="11" fill="#92400e" fontWeight="800">БАНЯ/САУНА</text>
-      <text x={662} y={189} textAnchor="middle" fontSize="9" fill="#92400e" opacity="0.7">~10 м²</text>
+      {/* WC: проходной санузел */}
+      <text x={(TX + SX) / 2} y={30} textAnchor="middle" fontSize="9" fill="#0f766e" fontWeight="800">САНУЗЕЛ</text>
+      <text x={(TX + SX) / 2} y={41} textAnchor="middle" fontSize="7.5" fill="#0d9488">проходной · ~6 м²</text>
+      {/* душ */}
+      <rect x={TX + 8} y={55} width={SX - TX - 16} height={80} rx="5" fill="#99f6e4" opacity="0.55" stroke="#0d9488" strokeWidth="1.5" />
+      <circle cx={(TX + SX) / 2} cy={95} r="18" fill="none" stroke="#0d9488" strokeWidth="2" strokeDasharray="4 3" />
+      <text x={(TX + SX) / 2} y={99} textAnchor="middle" fontSize="8" fill="#0f766e" fontWeight="700">ДУШ</text>
+      {/* унитаз */}
+      <ellipse cx={(TX + SX) / 2} cy={200} rx="22" ry="28" fill="#99f6e4" opacity="0.6" stroke="#0d9488" strokeWidth="1.5" />
+      <text x={(TX + SX) / 2} y={204} textAnchor="middle" fontSize="8" fill="#0f766e" fontWeight="700">WC</text>
+      {/* раковина */}
+      <rect x={TX + 10} y={245} width={30} height={24} rx="4" fill="#99f6e4" opacity="0.6" stroke="#0d9488" strokeWidth="1" />
+      <circle cx={TX + 25} cy={257} r="6" fill="none" stroke="#0d9488" strokeWidth="1.5" />
 
-      <text x={800} y={148} textAnchor="middle" fontSize="10" fill="#0f766e" fontWeight="800">САНУЗЕЛ ~6 м²</text>
+      {/* 2 входа подсветка */}
+      <text x={(TX + SX) / 2} y={285} textAnchor="middle" fontSize="7" fill="#0d9488" fontWeight="700">2 входа:</text>
+      <text x={(TX + SX) / 2} y={295} textAnchor="middle" fontSize="6.5" fill="#0d9488">из дома + из бани</text>
 
-      <text x={750} y={420} textAnchor="middle" fontSize="11" fill="#44403c" fontWeight="800">БОЙЛЕРНАЯ · ~8 м²</text>
+      {/* SAUNA */}
+      <rect x={SX + 8} y={20} width={W - SX - wall - 16} height={80} rx="5" fill="#fde68a" opacity="0.6" stroke="#d97706" strokeWidth="1.5" />
+      <rect x={SX + 8} y={25} width={W - SX - wall - 16} height={25} rx="3" fill="#fbbf24" opacity="0.5" />
+      <rect x={SX + 8} y={55} width={W - SX - wall - 16} height={20} rx="3" fill="#fbbf24" opacity="0.4" />
+      <text x={(SX + W - wall) / 2} y={72} textAnchor="middle" fontSize="9" fill="#92400e" fontWeight="700">ПОЛКИ</text>
+      {/* печь */}
+      <rect x={SX + 30} y={112} width={40} height={38} rx="6" fill="#ef4444" opacity="0.55" stroke="#dc2626" strokeWidth="1.5" />
+      <text x={SX + 50} y={136} textAnchor="middle" fontSize="8" fill="#7f1d1d" fontWeight="700">ПЕЧЬ</text>
+      <text x={(SX + W - wall) / 2} y={175} textAnchor="middle" fontSize="10" fill="#92400e" fontWeight="800">БАНЯ/САУНА</text>
+      <text x={(SX + W - wall) / 2} y={188} textAnchor="middle" fontSize="8" fill="#b45309" opacity="0.8">~10 м²</text>
+
+      {/* BOILER ROOM */}
+      <rect x={RX + 14} y={BY + 12} width={60} height={75} rx="8" fill="#94a3b8" opacity="0.7" stroke="#64748b" strokeWidth="1.5" />
+      <text x={RX + 44} y={BY + 55} textAnchor="middle" fontSize="8" fill="#1e293b" fontWeight="700">КОТЁЛ</text>
+      <rect x={RX + 90} y={BY + 17} width={45} height={60} rx="8" fill="#93c5fd" opacity="0.6" stroke="#3b82f6" strokeWidth="1.5" />
+      <text x={RX + 112} y={BY + 52} textAnchor="middle" fontSize="8" fill="#1e3a8a" fontWeight="700">БОЙЛЕР</text>
+      <text x={(RX + W - wall) / 2} y={H - 14} textAnchor="middle" fontSize="11" fill="#475569" fontWeight="800">БОЙЛЕРНАЯ · ~18 м²</text>
+
+      {/* ── HEAT ISOLATION NOTE ── */}
+      {/* Arrow + label showing insulated wall between tambour and living */}
+      <rect x={RX - 1} y={wall} width={wall + 2} height={BY - wall} fill="none" stroke="#f59e0b" strokeWidth="3" strokeDasharray="6 3" opacity="0.5" />
+      <text x={RX + 6} y={BY + 4} fontSize="7.5" fill="#b45309" fontWeight="700">утеплитель</text>
 
       {/* ── COMPASS ── */}
-      <g transform="translate(848, 440)">
+      <g transform={`translate(${W - 30}, 30)`}>
         <circle cx="0" cy="0" r="22" fill="white" stroke="#e2e8f0" strokeWidth="1.5" />
-        <text x="0" y="-10" textAnchor="middle" fontSize="9" fill="#ef4444" fontWeight="800">С</text>
-        <text x="0" y="16" textAnchor="middle" fontSize="9" fill="#78716c">Ю</text>
-        <text x="12" y="4" textAnchor="middle" fontSize="9" fill="#78716c">В</text>
-        <text x="-12" y="4" textAnchor="middle" fontSize="9" fill="#78716c">З</text>
-        <polygon points="0,-8 3,0 0,5 -3,0" fill="#ef4444" />
+        <text x="0" y="-8" textAnchor="middle" fontSize="9" fill="#ef4444" fontWeight="800">С</text>
+        <text x="0" y="15" textAnchor="middle" fontSize="9" fill="#78716c">Ю</text>
+        <polygon points="0,-5 2.5,4 0,2 -2.5,4" fill="#ef4444" />
       </g>
 
       {/* ── LEGEND ── */}
-      <g transform="translate(16, 452)">
-        <line x1="0" y1="8" x2="22" y2="8" stroke="#b45309" strokeWidth="2" strokeDasharray="4 2" />
-        <text x="26" y="12" fontSize="9" fill="#57534e">дверной проём</text>
-        <line x1="100" y1="8" x2="122" y2="8" stroke="#292524" strokeWidth="3" />
-        <text x="126" y="12" fontSize="9" fill="#57534e">стена</text>
+      <g transform={`translate(12, ${H - 24})`}>
+        <line x1="0" y1="6" x2="18" y2="6" stroke="#44403c" strokeWidth="2.5" strokeDasharray="5 3" />
+        <text x="22" y="10" fontSize="8.5" fill="#57534e">дверной проём</text>
+        <rect x="130" y="0" width="14" height="12" rx="2" fill="#ccfbf1" stroke="#0d9488" strokeWidth="1" />
+        <text x="148" y="10" fontSize="8.5" fill="#0d9488" fontWeight="700">проходной санузел (2 входа)</text>
+        <rect x="350" y="0" width="14" height="12" rx="2" fill="#fef9c3" stroke="#d97706" strokeWidth="1" />
+        <text x="368" y="10" fontSize="8.5" fill="#92400e" fontWeight="700">тамбур (тепловой буфер)</text>
       </g>
 
-      {/* ── DIMENSION LINES ── */}
-      {/* Width total */}
-      <line x1="0" y1={H + 14} x2={W} y2={H + 14} stroke="#78716c" strokeWidth="1" markerEnd="url(#arr)" />
-      <text x={W / 2} y={H + 26} textAnchor="middle" fontSize="11" fill="#57534e" fontWeight="700">12 м (фасад)</text>
-      {/* Height */}
-      <line x1={W + 14} y1="0" x2={W + 14} y2={H} stroke="#78716c" strokeWidth="1" />
-      <text x={W + 22} y={H / 2} textAnchor="start" fontSize="11" fill="#57534e" fontWeight="700" transform={`rotate(90, ${W + 22}, ${H / 2})`}>6 м</text>
+      {/* ── DIMENSION ── */}
+      <text x={W / 2} y={H - 4} textAnchor="middle" fontSize="10" fill="#78716c" fontWeight="600">← 12 м →</text>
     </svg>
   );
 };
