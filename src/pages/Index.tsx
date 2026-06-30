@@ -1,49 +1,73 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 
 const EXTERIOR = 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/9dfc1472-c0dc-4568-95e7-9c5c0c630f71.jpg';
 const INTERIOR = 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/917910b5-ee75-4c93-ba0c-013f7b70e5d8.jpg';
+const MASTER_BED = 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/f40ce406-6676-405d-a32c-6f3ed6abdd15.jpg';
+const SAUNA = 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/7efc4719-501c-4a64-bb8b-60d29ab2e4cf.jpg';
 
 const PARAMS = [
   { icon: 'Ruler', value: '6 × 12 м', label: 'Габариты дома' },
   { icon: 'Square', value: '72 м²', label: 'Общая площадь' },
-  { icon: 'Layers', value: '3 зоны', label: 'Конструктивные секции' },
+  { icon: 'Layers', value: '3 секции', label: 'Конструктивные зоны' },
   { icon: 'TreePine', value: 'Ø 48 см', label: 'Диаметр бревна каркаса' },
 ];
 
-const ZONES = [
+const LEFT_ROOMS = [
   {
-    icon: 'Columns3',
-    title: 'Несущий каркас',
-    material: 'Бревно Ø 48 см',
-    size: 'Весь периметр',
-    desc: 'Мощный каркас из бревна диаметром 48 см формирует силовой контур всего дома и держит кровлю.',
-    color: 'from-amber-700 to-amber-900',
+    icon: 'BedDouble',
+    title: 'Мастер-спальня',
+    area: '~12 м²',
+    color: 'bg-rose-50 border-rose-200',
+    iconColor: 'text-rose-600',
+    badge: 'bg-rose-100 text-rose-700',
+    desc: 'Просторная родительская спальня с гардеробной зоной. Тёплые стены из бруса лафет, большое окно с видом на природу.',
+    image: MASTER_BED,
   },
   {
-    icon: 'Home',
-    title: 'Кухня-гостиная',
-    material: 'Блоки сибит',
-    size: '4 × 6 м',
-    desc: 'Центральная зона из газоблоков сибит — тёплое, ровное и просторное общественное пространство дома.',
-    color: 'from-stone-400 to-stone-600',
+    icon: 'Baby',
+    title: 'Детская спальня',
+    area: '~12 м²',
+    color: 'bg-sky-50 border-sky-200',
+    iconColor: 'text-sky-600',
+    badge: 'bg-sky-100 text-sky-700',
+    desc: 'Уютная детская комната с деревянными стенами из бруса лафет. Светлая, тёплая и безопасная.',
+    image: null,
+  },
+];
+
+const RIGHT_ROOMS = [
+  {
+    icon: 'Flame',
+    title: 'Баня / Сауна',
+    area: '~12 м²',
+    color: 'bg-amber-50 border-amber-200',
+    iconColor: 'text-amber-600',
+    badge: 'bg-amber-100 text-amber-700',
+    desc: 'Финская сауна из бруса лафет с полками и каменкой. Выход во двор через техническую зону.',
+    image: SAUNA,
   },
   {
-    icon: 'PanelLeft',
-    title: 'Левое крыло',
-    material: 'Брус лафет',
-    size: '4 × 6 м',
-    desc: 'Жилая секция из бруса лафет с природной фактурой дерева и отличной теплоизоляцией.',
-    color: 'from-orange-600 to-amber-800',
+    icon: 'ShowerHead',
+    title: 'Туалет с душем',
+    area: '~6 м²',
+    color: 'bg-teal-50 border-teal-200',
+    iconColor: 'text-teal-600',
+    badge: 'bg-teal-100 text-teal-700',
+    desc: 'Компактный санузел с душевой кабиной, унитазом и раковиной. Смежен с баней и бойлерной.',
+    image: null,
   },
   {
-    icon: 'PanelRight',
-    title: 'Правое крыло',
-    material: 'Брус лафет',
-    size: '4 × 6 м',
-    desc: 'Симметричная жилая секция из бруса лафет — уютные комнаты с тёплыми деревянными стенами.',
-    color: 'from-orange-600 to-amber-800',
+    icon: 'Zap',
+    title: 'Бойлерная',
+    area: '~6 м²',
+    color: 'bg-stone-50 border-stone-200',
+    iconColor: 'text-stone-600',
+    badge: 'bg-stone-100 text-stone-700',
+    desc: 'Техническая комната с котлом, бойлером и системой отопления. Доступ с улицы или из коридора.',
+    image: null,
   },
 ];
 
@@ -69,6 +93,8 @@ const MATERIALS = [
 ];
 
 const Index = () => {
+  const [activeWing, setActiveWing] = useState<'left' | 'right'>('left');
+
   return (
     <div className="min-h-screen bg-mesh overflow-x-hidden">
       {/* Header */}
@@ -81,7 +107,8 @@ const Index = () => {
             <span className="font-display font-extrabold text-xl tracking-tight">ДомПроект 6×12</span>
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-            <a href="#zones" className="hover:text-foreground transition-colors">Конструкция</a>
+            <a href="#plan" className="hover:text-foreground transition-colors">Планировка</a>
+            <a href="#wings" className="hover:text-foreground transition-colors">Крылья</a>
             <a href="#materials" className="hover:text-foreground transition-colors">Материалы</a>
             <a href="#cta" className="hover:text-foreground transition-colors">Заказать</a>
           </nav>
@@ -106,16 +133,16 @@ const Index = () => {
               <span className="text-gradient">из трёх материалов</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground max-w-md animate-fade-up" style={{ animationDelay: '0.2s' }}>
-              Бревенчатый каркас Ø 48 см, центральная кухня-гостиная из сибита и два жилых крыла из бруса лафет. Прочность, тепло и природная красота в одном проекте 6×12 м.
+              Каркас из бревна Ø 48 см, центральная кухня-гостиная из сибита, левое крыло — спальни, правое — баня, санузел и бойлерная.
             </p>
             <div className="mt-8 flex flex-wrap gap-4 animate-fade-up" style={{ animationDelay: '0.3s' }}>
-              <Button size="lg" className="rounded-full text-base font-semibold h-14 px-8 shadow-xl shadow-primary/25">
-                Смотреть проект
+              <Button size="lg" className="rounded-full text-base font-semibold h-14 px-8 shadow-xl shadow-primary/25" onClick={() => document.getElementById('plan')?.scrollIntoView({ behavior: 'smooth' })}>
+                Смотреть планировку
                 <Icon name="ArrowRight" size={20} className="ml-1" />
               </Button>
               <Button size="lg" variant="outline" className="rounded-full text-base font-semibold h-14 px-8 border-2">
                 <Icon name="Download" size={18} className="mr-1" />
-                Скачать планировку
+                Скачать PDF
               </Button>
             </div>
           </div>
@@ -152,60 +179,152 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Zones + Plan */}
-      <section id="zones" className="container pb-24">
-        <div className="max-w-2xl mb-10">
-          <h2 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight">Конструкция дома</h2>
-          <p className="mt-3 text-muted-foreground text-lg">Три зоны из разных материалов на едином бревенчатом каркасе.</p>
+      {/* Floor Plan */}
+      <section id="plan" className="container pb-20">
+        <div className="max-w-2xl mb-8">
+          <h2 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight">Планировка</h2>
+          <p className="mt-3 text-muted-foreground text-lg">Схема распределения зон по дому 6×12 м.</p>
         </div>
 
-        {/* Schematic plan */}
-        <div className="mb-10 rounded-3xl bg-white border border-border/60 p-6 md:p-8">
-          <div className="flex items-center gap-2 mb-5 text-sm font-semibold text-muted-foreground">
+        <div className="rounded-3xl bg-white border border-border/60 p-6 md:p-10">
+          <div className="flex items-center gap-2 mb-6 text-sm font-semibold text-muted-foreground">
             <Icon name="LayoutGrid" size={18} className="text-primary" />
-            Схема планировки · 6 × 12 м
+            Схема планировки · вид сверху · 6 × 12 м
           </div>
-          <div className="grid grid-cols-3 gap-3 h-48 md:h-64">
-            <div className="rounded-2xl bg-gradient-to-br from-orange-600 to-amber-800 text-white flex flex-col items-center justify-center text-center p-3">
-              <Icon name="PanelLeft" size={26} className="mb-2" />
-              <div className="font-display font-bold text-sm md:text-base">Левое крыло</div>
-              <div className="text-xs opacity-80">Брус лафет · 4×6 м</div>
+
+          {/* Plan grid */}
+          <div className="grid grid-cols-3 gap-3">
+
+            {/* LEFT WING */}
+            <div className="flex flex-col gap-3">
+              <div className="rounded-2xl bg-gradient-to-br from-orange-600 to-amber-800 text-white px-3 py-2 text-center">
+                <div className="text-xs font-bold uppercase tracking-wide opacity-80 mb-1">Левое крыло · брус лафет</div>
+              </div>
+              <div className="rounded-2xl bg-rose-50 border-2 border-rose-200 flex flex-col items-center justify-center text-center p-4 h-32">
+                <Icon name="BedDouble" size={22} className="text-rose-500 mb-2" />
+                <div className="font-display font-bold text-sm text-rose-800">Мастер-спальня</div>
+                <div className="text-xs text-rose-500 mt-1">~12 м²</div>
+              </div>
+              <div className="rounded-2xl bg-sky-50 border-2 border-sky-200 flex flex-col items-center justify-center text-center p-4 h-32">
+                <Icon name="Baby" size={22} className="text-sky-500 mb-2" />
+                <div className="font-display font-bold text-sm text-sky-800">Детская</div>
+                <div className="text-xs text-sky-500 mt-1">~12 м²</div>
+              </div>
             </div>
-            <div className="rounded-2xl bg-gradient-to-br from-stone-400 to-stone-600 text-white flex flex-col items-center justify-center text-center p-3">
-              <Icon name="Home" size={26} className="mb-2" />
-              <div className="font-display font-bold text-sm md:text-base">Кухня-гостиная</div>
-              <div className="text-xs opacity-90">Сибит · 4×6 м</div>
+
+            {/* CENTER */}
+            <div className="flex flex-col gap-3">
+              <div className="rounded-2xl bg-gradient-to-br from-stone-400 to-stone-600 text-white px-3 py-2 text-center">
+                <div className="text-xs font-bold uppercase tracking-wide opacity-90 mb-1">Центр · сибит</div>
+              </div>
+              <div className="rounded-2xl bg-stone-50 border-2 border-stone-200 flex flex-col items-center justify-center text-center p-4 flex-1">
+                <Icon name="Home" size={28} className="text-stone-500 mb-2" />
+                <div className="font-display font-bold text-base text-stone-800">Кухня-гостиная</div>
+                <div className="text-xs text-stone-500 mt-1">4 × 6 м · 24 м²</div>
+                <div className="mt-3 text-xs text-stone-400">Общее пространство</div>
+              </div>
             </div>
-            <div className="rounded-2xl bg-gradient-to-br from-orange-600 to-amber-800 text-white flex flex-col items-center justify-center text-center p-3">
-              <Icon name="PanelRight" size={26} className="mb-2" />
-              <div className="font-display font-bold text-sm md:text-base">Правое крыло</div>
-              <div className="text-xs opacity-80">Брус лафет · 4×6 м</div>
+
+            {/* RIGHT WING */}
+            <div className="flex flex-col gap-3">
+              <div className="rounded-2xl bg-gradient-to-br from-orange-600 to-amber-800 text-white px-3 py-2 text-center">
+                <div className="text-xs font-bold uppercase tracking-wide opacity-80 mb-1">Правое крыло · брус лафет</div>
+              </div>
+              <div className="rounded-2xl bg-amber-50 border-2 border-amber-200 flex flex-col items-center justify-center text-center p-3 h-24">
+                <Icon name="Flame" size={20} className="text-amber-500 mb-1" />
+                <div className="font-display font-bold text-sm text-amber-800">Баня / Сауна</div>
+                <div className="text-xs text-amber-500">~12 м²</div>
+              </div>
+              <div className="rounded-2xl bg-teal-50 border-2 border-teal-200 flex flex-col items-center justify-center text-center p-3 h-20">
+                <Icon name="ShowerHead" size={18} className="text-teal-500 mb-1" />
+                <div className="font-display font-bold text-sm text-teal-800">Душ / WC</div>
+                <div className="text-xs text-teal-500">~6 м²</div>
+              </div>
+              <div className="rounded-2xl bg-stone-50 border-2 border-stone-200 flex flex-col items-center justify-center text-center p-3 h-20">
+                <Icon name="Zap" size={18} className="text-stone-500 mb-1" />
+                <div className="font-display font-bold text-sm text-stone-800">Бойлерная</div>
+                <div className="text-xs text-stone-500">~6 м²</div>
+              </div>
             </div>
           </div>
-          <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+
+          <div className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground">
             <Icon name="Columns3" size={14} className="text-primary" />
             По всему периметру — несущий каркас из бревна Ø 48 см
           </div>
         </div>
+      </section>
 
-        {/* Zone cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {ZONES.map((z, i) => (
-            <article
-              key={z.title}
-              className="rounded-3xl bg-white border border-border/60 p-6 hover-lift animate-fade-up"
-              style={{ animationDelay: `${0.06 * i}s` }}
-            >
-              <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${z.color} flex items-center justify-center mb-4`}>
-                <Icon name={z.icon} size={24} className="text-white" />
-              </div>
-              <Badge className="rounded-full bg-secondary text-secondary-foreground font-semibold mb-3">{z.size}</Badge>
-              <h3 className="font-display font-bold text-lg mb-1">{z.title}</h3>
-              <div className="text-sm font-semibold text-accent mb-3">{z.material}</div>
-              <p className="text-sm text-muted-foreground leading-relaxed">{z.desc}</p>
-            </article>
-          ))}
+      {/* Wings detail */}
+      <section id="wings" className="container pb-24">
+        <div className="max-w-2xl mb-8">
+          <h2 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight">Крылья дома</h2>
+          <p className="mt-3 text-muted-foreground text-lg">Подробнее о каждом помещении в боковых секциях.</p>
         </div>
+
+        {/* Toggle */}
+        <div className="flex gap-2 mb-8 p-1 bg-secondary rounded-full w-fit">
+          <button
+            onClick={() => setActiveWing('left')}
+            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${activeWing === 'left' ? 'bg-white text-primary shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
+          >
+            🛏 Левое крыло — спальни
+          </button>
+          <button
+            onClick={() => setActiveWing('right')}
+            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${activeWing === 'right' ? 'bg-white text-primary shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
+          >
+            🔥 Правое крыло — баня
+          </button>
+        </div>
+
+        {activeWing === 'left' && (
+          <div className="grid sm:grid-cols-2 gap-6 animate-fade-up">
+            {LEFT_ROOMS.map((r) => (
+              <article key={r.title} className={`rounded-3xl border-2 ${r.color} overflow-hidden hover-lift`}>
+                {r.image && (
+                  <img src={r.image} alt={r.title} className="w-full h-48 object-cover" />
+                )}
+                <div className="p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-xl bg-white/80 flex items-center justify-center">
+                      <Icon name={r.icon} size={22} className={r.iconColor} />
+                    </div>
+                    <div>
+                      <div className="font-display font-bold text-lg">{r.title}</div>
+                      <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${r.badge}`}>{r.area}</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{r.desc}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {activeWing === 'right' && (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-up">
+            {RIGHT_ROOMS.map((r) => (
+              <article key={r.title} className={`rounded-3xl border-2 ${r.color} overflow-hidden hover-lift`}>
+                {r.image && (
+                  <img src={r.image} alt={r.title} className="w-full h-48 object-cover" />
+                )}
+                <div className="p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-xl bg-white/80 flex items-center justify-center">
+                      <Icon name={r.icon} size={22} className={r.iconColor} />
+                    </div>
+                    <div>
+                      <div className="font-display font-bold text-lg">{r.title}</div>
+                      <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${r.badge}`}>{r.area}</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{r.desc}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Materials + Interior */}
