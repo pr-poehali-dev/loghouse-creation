@@ -347,8 +347,25 @@ const FloorPlan = () => {
       <polygon points={`${(LX + RX) / 2},95 ${(LX + RX) / 2 - 6},108 ${(LX + RX) / 2 + 6},108`} fill="#16a34a" opacity="0.5" />
       <text x={(LX + RX) / 2 + 8} y={300} fontSize="8" fill="#16a34a" fontWeight="600" transform={`rotate(-90, ${(LX + RX) / 2 + 8}, 300)`}>взгляд от входа</text>
 
+      {/* ── ГАРДЕРОБНАЯ ЗОНА — правый угол у входа (между кухней и баней) ── */}
+      {/* Ниша 80×90px вдоль правой стены центральной секции, снизу */}
+      <rect x={RX - 88} y={H - wall - 90} width={84} height={86} rx="4" fill="#e9d5ff" opacity="0.75" stroke="#7c3aed" strokeWidth="1.5" />
+      {/* штанга для одежды */}
+      <line x1={RX - 84} y1={H - wall - 75} x2={RX - 12} y2={H - wall - 75} stroke="#7c3aed" strokeWidth="2.5" opacity="0.7" />
+      {/* вешалки — крючки схематично */}
+      {[RX - 78, RX - 60, RX - 42, RX - 24].map((x, i) => (
+        <g key={i}>
+          <line x1={x} y1={H - wall - 75} x2={x} y2={H - wall - 52} stroke="#7c3aed" strokeWidth="1.5" opacity="0.6" />
+          <ellipse cx={x} cy={H - wall - 50} rx="5" ry="7" fill="none" stroke="#7c3aed" strokeWidth="1.2" opacity="0.5" />
+        </g>
+      ))}
+      {/* полка снизу */}
+      <rect x={RX - 86} y={H - wall - 22} width={82} height={8} rx="2" fill="#7c3aed" opacity="0.25" />
+      <text x={RX - 46} y={H - wall - 96} textAnchor="middle" fontSize="8" fill="#6d28d9" fontWeight="800">ГАРДЕРОБ</text>
+      <text x={RX - 46} y={H - wall - 86} textAnchor="middle" fontSize="7" fill="#7c3aed" opacity="0.8">прихожая · ~4 м²</text>
+
       {/* CENTER label */}
-      <text x={(LX + RX) / 2} y={H - 14} textAnchor="middle" fontSize="12" fill="#57534e" fontWeight="800">КУХНЯ-ГОСТИНАЯ · ~24 м²</text>
+      <text x={(LX + RX) / 2 - 30} y={H - 14} textAnchor="middle" fontSize="11" fill="#57534e" fontWeight="800">КУХНЯ-ГОСТИНАЯ · ~24 м²</text>
 
       {/* TAMBOUR: предбанник */}
       <text x={(RX + TX) / 2} y={80} textAnchor="middle" fontSize="9" fill="#92400e" fontWeight="800">ТАМБУР</text>
@@ -610,6 +627,42 @@ const Index = () => {
             ))}
           </div>
         )}
+      </section>
+
+      {/* Living room visualization */}
+      <section className="container pb-24">
+        <div className="rounded-[2.5rem] overflow-hidden relative shadow-2xl shadow-primary/15 group">
+          <img
+            src="https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/2a4b2ce4-1aaf-49d1-b25e-103de2bbdc09.jpg"
+            alt="Интерьер кухни-гостиной с панорамными окнами"
+            className="w-full object-cover max-h-[520px] transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
+            <Badge className="rounded-full bg-white/20 backdrop-blur text-white border-white/30 mb-4 font-semibold">
+              🏠 Визуализация · кухня-гостиная
+            </Badge>
+            <h3 className="font-display font-extrabold text-white text-2xl md:text-4xl mb-2">
+              Панорамные окна — от пола до потолка
+            </h3>
+            <p className="text-white/80 text-base max-w-xl">
+              Заходишь с дороги — и сразу видишь сад через весь дом. Диван лицом к окнам, кухня у входной стены, гардеробная ниша справа от двери.
+            </p>
+          </div>
+          {/* Зоны-метки */}
+          <div className="absolute top-6 left-6 flex flex-wrap gap-2">
+            {[
+              { color: 'bg-sky-500', label: '🪟 Панорама · сад' },
+              { color: 'bg-stone-500', label: '🛋 Гостиная · диван' },
+              { color: 'bg-amber-600', label: '🍳 Кухня · у входа' },
+              { color: 'bg-violet-500', label: '🧥 Гардероб · угол' },
+            ].map(z => (
+              <span key={z.label} className={`${z.color} text-white text-xs font-bold px-3 py-1 rounded-full backdrop-blur`}>
+                {z.label}
+              </span>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Materials */}
