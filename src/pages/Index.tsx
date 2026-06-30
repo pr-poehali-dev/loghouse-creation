@@ -417,6 +417,7 @@ const Index = () => {
             <a href="#ergo" className="hover:text-foreground transition-colors">Эргономика</a>
             <a href="#wings" className="hover:text-foreground transition-colors">Помещения</a>
             <a href="#site" className="hover:text-foreground transition-colors">Участок</a>
+            <a href="#facades" className="hover:text-foreground transition-colors">Фасады</a>
             <a href="#cta" className="hover:text-foreground transition-colors">Заказать</a>
           </nav>
           <Button className="rounded-full font-semibold shadow-lg shadow-primary/25">
@@ -618,158 +619,225 @@ const Index = () => {
       </section>
 
       {/* Site placement */}
-      <section id="site" className="container pb-24">
+      <section id="site" className="container pb-16">
         <div className="max-w-2xl mb-8">
           <h2 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight">Посадка на участке</h2>
           <p className="mt-3 text-muted-foreground text-lg">
-            Кадастровый номер <span className="font-bold text-foreground">22:65:012005:1113</span> · схема размещения дома 6×12 м.
+            Кадастровый номер <span className="font-bold text-foreground">22:65:012005:1113</span> · дом стоит вдоль красной границы (дорога).
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 items-start">
-
-          {/* Cadastral photo */}
-          <div className="rounded-3xl overflow-hidden border border-border/60 shadow-xl shadow-primary/10 relative">
+        <div className="grid lg:grid-cols-2 gap-8 items-start mb-8">
+          {/* Cadastral photo — latest */}
+          <div className="rounded-3xl overflow-hidden border-2 border-red-300 shadow-xl relative">
             <img
-              src="https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/bucket/d7ebf358-f5e7-463f-ad35-ea10785fd6ff.jpg"
-              alt="Кадастровый снимок участка 22:65:012005:1113"
+              src="https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/bucket/174f31e3-25e8-4461-9345-e84b593b4446.jpeg"
+              alt="Кадастровый снимок участка"
               className="w-full object-cover"
             />
-            <div className="absolute top-4 left-4 bg-black/60 backdrop-blur text-white text-xs font-bold px-3 py-1.5 rounded-full">
+            <div className="absolute top-4 left-4 bg-black/65 backdrop-blur text-white text-xs font-bold px-3 py-1.5 rounded-full">
               📍 22:65:012005:1113
+            </div>
+            <div className="absolute bottom-4 left-4 bg-red-600/90 backdrop-blur text-white text-xs font-bold px-3 py-1.5 rounded-full">
+              🔴 красная линия = дорога / граница
             </div>
           </div>
 
-          {/* SVG placement scheme */}
-          <div className="rounded-3xl bg-white border border-border/60 p-6 shadow-xl shadow-primary/10">
-            <div className="flex items-center gap-2 mb-4 text-sm font-semibold text-muted-foreground">
+          {/* SVG — дом вдоль красной границы (левая/диагональная сторона) */}
+          <div className="rounded-3xl bg-white border border-border/60 p-5 shadow-xl">
+            <div className="flex items-center gap-2 mb-3 text-sm font-semibold text-muted-foreground">
               <Icon name="MapPin" size={16} className="text-primary" />
-              Схема посадки дома на участок
+              Схема посадки · дом вдоль красной границы
             </div>
-            <svg viewBox="0 0 420 380" className="w-full h-auto">
-              {/* Sky/ground bg */}
-              <rect width="420" height="380" fill="#f0fdf4" rx="12" />
+            <svg viewBox="0 0 460 420" className="w-full h-auto">
+              {/* bg */}
+              <rect width="460" height="420" fill="#f0fdf4" rx="10" />
 
-              {/* Road (diagonal, top-left) */}
-              <polygon points="0,80 60,0 90,0 30,80" fill="#d4d4d4" opacity="0.8" />
-              <polygon points="0,80 30,80 0,120" fill="#d4d4d4" opacity="0.6" />
-              <text x="18" y="55" fontSize="9" fill="#78716c" fontWeight="600" transform="rotate(-52, 18, 55)">ДОРОГА</text>
+              {/* ДОРОГА — вдоль левой диагональной границы */}
+              <polygon points="0,0 55,0 85,420 0,420" fill="#d4d4d4" opacity="0.85" />
+              <text x="27" y="210" textAnchor="middle" fontSize="9" fill="#57534e" fontWeight="700" transform="rotate(-90,27,210)">ДОРОГА (красная граница)</text>
 
-              {/* Plot boundary (trapezoid matching photo shape) */}
-              <polygon
-                points="80,40 310,55 340,300 60,310"
-                fill="#fefce8"
-                stroke="#ca8a04"
-                strokeWidth="2.5"
-                strokeDasharray="8 4"
-              />
+              {/* Участок — трапеция (широкая внизу) */}
+              <polygon points="55,10 380,30 380,390 85,410" fill="#fefce8" stroke="#ca8a04" strokeWidth="2.5" strokeDasharray="8 4" />
 
-              {/* Setback lines (3m offset) */}
-              <polygon
-                points="100,68 290,80 318,278 82,286"
-                fill="none"
-                stroke="#86efac"
-                strokeWidth="1.5"
-                strokeDasharray="5 4"
-                opacity="0.8"
-              />
+              {/* Отступ 3м от красной границы */}
+              <polygon points="88,10 115,10 140,410 118,410" fill="none" stroke="#86efac" strokeWidth="1.5" strokeDasharray="5 3" opacity="0.9" />
+              <text x="102" y="50" fontSize="7.5" fill="#16a34a" fontWeight="700" transform="rotate(-87,102,50)">← 3 м отступ</text>
 
-              {/* HOUSE rectangle (6×12м, rotated slightly to follow plot) */}
-              <g transform="translate(110, 95) rotate(3)">
-                {/* Shadow */}
-                <rect x="4" y="4" width="190" height="95" rx="6" fill="#000" opacity="0.08" />
-                {/* House body */}
-                <rect width="190" height="95" rx="6" fill="white" stroke="#292524" strokeWidth="2.5" />
+              {/* ДОМ — вертикально, вдоль левой (красной) границы, с отступом 3м */}
+              {/* Дом 12м высота × 6м ширина в системе SVG (масштаб ~1м=26px) */}
+              {/* x=125 (после отступа), y=55, w=155(6м), h=312(12м) */}
+              <g transform="translate(125, 54)">
+                {/* тень */}
+                <rect x="5" y="5" width="155" height="312" rx="6" fill="#000" opacity="0.07" />
+                {/* корпус */}
+                <rect width="155" height="312" rx="6" fill="white" stroke="#292524" strokeWidth="2.5" />
 
-                {/* Left wing - bedrooms */}
-                <rect width="63" height="95" rx="4" fill="#fecdd3" opacity="0.6" />
-                <text x="31" y="40" textAnchor="middle" fontSize="8" fill="#be123c" fontWeight="700">СПАЛЬНИ</text>
-                <text x="31" y="52" textAnchor="middle" fontSize="7" fill="#be123c" opacity="0.8">лафет</text>
+                {/* Верхняя часть — СПАЛЬНИ (левое крыло вдоль дороги) */}
+                {/* Ближайшие к дороге — спальни НАВЕРХУ схемы */}
+                <rect width="155" height="104" rx="4" fill="#fecdd3" opacity="0.65" />
+                <text x="77" y="45" textAnchor="middle" fontSize="9" fill="#be123c" fontWeight="800">СПАЛЬНИ</text>
+                <text x="77" y="59" textAnchor="middle" fontSize="7.5" fill="#be123c">мастер + детская</text>
+                <text x="77" y="71" textAnchor="middle" fontSize="7" fill="#be123c" opacity="0.8">брус лафет</text>
+                {/* окна спален на правую сторону (тихая) */}
+                <rect x="130" y="20" width="18" height="28" rx="3" fill="#bae6fd" opacity="0.7" stroke="#0284c7" strokeWidth="1" />
+                <rect x="130" y="60" width="18" height="28" rx="3" fill="#bae6fd" opacity="0.7" stroke="#0284c7" strokeWidth="1" />
+                <text x="153" y="56" fontSize="7" fill="#0369a1" fontWeight="600">окна</text>
 
-                {/* Center - living */}
-                <rect x="63" width="64" height="95" fill="#e7e5e4" opacity="0.6" />
-                <text x="95" y="40" textAnchor="middle" fontSize="8" fill="#44403c" fontWeight="700">КУХНЯ</text>
-                <text x="95" y="52" textAnchor="middle" fontSize="8" fill="#44403c" fontWeight="700">ГОСТИНАЯ</text>
-                <text x="95" y="64" textAnchor="middle" fontSize="7" fill="#78716c" opacity="0.8">сибит</text>
+                {/* Горизонтальная стена: спальни | гостиная */}
+                <rect x="0" y="104" width="155" height="8" fill="#44403c" opacity="0.7" />
 
-                {/* Right wing - sauna/tech */}
-                <rect x="127" width="63" height="95" rx="4" fill="#fde68a" opacity="0.6" />
-                <text x="159" y="38" textAnchor="middle" fontSize="8" fill="#92400e" fontWeight="700">БАНЯ</text>
-                <text x="159" y="50" textAnchor="middle" fontSize="7.5" fill="#92400e" fontWeight="700">САНУЗЕЛ</text>
-                <text x="159" y="62" textAnchor="middle" fontSize="7" fill="#92400e" fontWeight="700">БОЙЛЕР</text>
-                <text x="159" y="74" textAnchor="middle" fontSize="7" fill="#b45309" opacity="0.8">лафет</text>
+                {/* Центр — КУХНЯ-ГОСТИНАЯ */}
+                <rect x="0" y="112" width="155" height="96" fill="#f5f5f4" opacity="0.85" />
+                <rect x="0" y="112" width="155" height="96" fill="url(#hatch-sibit)" opacity="0.5" />
+                <text x="77" y="155" textAnchor="middle" fontSize="9" fill="#44403c" fontWeight="800">КУХНЯ-ГОСТИНАЯ</text>
+                <text x="77" y="168" textAnchor="middle" fontSize="7.5" fill="#57534e">блоки сибит · ~24 м²</text>
+                {/* Главный вход — со стороны дороги (левая сторона) */}
+                <rect x="0" y="140" width="8" height="36" fill="#f0fdf4" />
+                <path d="M 0 140 A 34 34 0 0 1 34 174" fill="none" stroke="#16a34a" strokeWidth="2" strokeDasharray="4 2" />
+                <line x1="0" y1="140" x2="34" y2="140" stroke="#16a34a" strokeWidth="2.2" />
+                <text x="-28" y="162" fontSize="8" fill="#15803d" fontWeight="800" textAnchor="middle">ВХОД</text>
+                <polygon points="-8,158 -22,154 -22,162" fill="#16a34a" />
+                {/* окна кухни на дорогу */}
+                <rect x="0" y="118" width="8" height="20" rx="2" fill="#bae6fd" opacity="0.7" stroke="#0284c7" strokeWidth="1" />
+                <rect x="0" y="190" width="8" height="20" rx="2" fill="#bae6fd" opacity="0.7" stroke="#0284c7" strokeWidth="1" />
 
-                {/* Internal dividers */}
-                <line x1="63" y1="0" x2="63" y2="95" stroke="#292524" strokeWidth="1.5" opacity="0.5" />
-                <line x1="127" y1="0" x2="127" y2="95" stroke="#292524" strokeWidth="1.5" opacity="0.5" />
+                {/* Горизонтальная стена: гостиная | баня */}
+                <rect x="0" y="208" width="155" height="8" fill="#44403c" opacity="0.7" />
 
-                {/* Main entrance arrow */}
-                <polygon points="95,95 88,115 102,115" fill="#16a34a" opacity="0.9" />
-                <text x="95" y="130" textAnchor="middle" fontSize="8" fill="#15803d" fontWeight="700">ВХОД</text>
+                {/* Нижняя часть — БАНЯ / САНУЗЕЛ / БОЙЛЕР */}
+                <rect x="0" y="216" width="155" height="96" rx="4" fill="#fef3c7" opacity="0.65" />
 
-                {/* Sauna exterior exit */}
-                <polygon points="190,47 210,40 210,54" fill="#d97706" opacity="0.9" />
-                <text x="222" y="52" fontSize="7" fill="#d97706" fontWeight="700">выход</text>
-                <text x="222" y="61" fontSize="7" fill="#d97706" fontWeight="700">бани</text>
+                {/* Тамбур */}
+                <rect x="0" y="216" width="50" height="96" fill="#fef9c3" opacity="0.8" />
+                <text x="25" y="258" textAnchor="middle" fontSize="8" fill="#92400e" fontWeight="700">ТАМ-</text>
+                <text x="25" y="270" textAnchor="middle" fontSize="8" fill="#92400e" fontWeight="700">БУР</text>
+                {/* выход тамбура на улицу */}
+                <rect x="0" y="238" width="8" height="30" fill="#fef9c3" />
+                <path d="M 0 238 A 28 28 0 0 0 28 266" fill="none" stroke="#d97706" strokeWidth="1.8" strokeDasharray="3 2" />
+                <line x1="0" y1="238" x2="0" y2="266" stroke="#d97706" strokeWidth="2" />
+                <text x="-22" y="256" fontSize="7" fill="#d97706" fontWeight="700" textAnchor="middle">выход</text>
+                <text x="-22" y="265" fontSize="7" fill="#d97706" fontWeight="700" textAnchor="middle">бани</text>
 
-                {/* Dimension labels */}
-                <text x="95" y="-8" textAnchor="middle" fontSize="9" fill="#57534e" fontWeight="700">12 м</text>
-                <text x="-14" y="52" textAnchor="middle" fontSize="9" fill="#57534e" fontWeight="700" transform="rotate(-90,-14,52)">6 м</text>
+                {/* Санузел */}
+                <rect x="50" y="216" width="55" height="96" fill="#ccfbf1" opacity="0.7" />
+                <text x="77" y="255" textAnchor="middle" fontSize="8" fill="#0f766e" fontWeight="800">САНУЗЕЛ</text>
+                <text x="77" y="267" textAnchor="middle" fontSize="7" fill="#0d9488">2 входа</text>
+                {/* дверь из гостиной в санузел */}
+                <rect x="50" y="208" width="30" height="8" fill="#ccfbf1" />
+                <path d="M 50 208 A 28 28 0 0 0 78 236" fill="none" stroke="#0d9488" strokeWidth="1.8" strokeDasharray="3 2" />
+                <line x1="50" y1="208" x2="78" y2="208" stroke="#0d9488" strokeWidth="2" />
+
+                {/* Сауна */}
+                <rect x="105" y="216" width="50" height="96" rx="4" fill="#fde68a" opacity="0.7" />
+                <text x="130" y="258" textAnchor="middle" fontSize="8" fill="#92400e" fontWeight="800">САУНА</text>
+                <text x="130" y="270" textAnchor="middle" fontSize="7" fill="#b45309">~10 м²</text>
+
+                {/* Внутренние стены банного блока */}
+                <rect x="50" y="216" width="6" height="96" fill="#78716c" opacity="0.6" />
+                <rect x="105" y="216" width="6" height="96" fill="#78716c" opacity="0.6" />
+
+                {/* Бойлерная — отдельно внизу */}
+                <rect x="0" y="312" width="155" height="0" fill="#f1f5f9" />
+
+                {/* Внутренние стены секций */}
+                <line x1="0" y1="104" x2="155" y2="104" stroke="#44403c" strokeWidth="6" />
+                <line x1="0" y1="208" x2="155" y2="208" stroke="#44403c" strokeWidth="6" />
+
+                {/* Размеры */}
+                <text x="77" y="-10" textAnchor="middle" fontSize="10" fill="#57534e" fontWeight="700">← 6 м →</text>
+                <text x="170" y="156" textAnchor="middle" fontSize="10" fill="#57534e" fontWeight="700" transform="rotate(90,170,156)">← 12 м →</text>
               </g>
 
-              {/* Setback distance labels */}
-              <text x="88" y="86" fontSize="8" fill="#16a34a" fontWeight="600">↑ 3 м</text>
-              <text x="84" y="290" fontSize="8" fill="#16a34a" fontWeight="600">↓ 3 м</text>
-              <text x="328" y="190" fontSize="8" fill="#16a34a" fontWeight="600">→ 3 м</text>
-              <text x="62" y="200" fontSize="8" fill="#16a34a" fontWeight="600" transform="rotate(-90, 62, 200)">3 м →</text>
+              {/* Бойлерная — снаружи как пристройка или в нижней части */}
+              <rect x="125" y="366" width="80" height="45" rx="5" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="5 3" />
+              <text x="165" y="388" textAnchor="middle" fontSize="8" fill="#475569" fontWeight="700">БОЙЛЕРНАЯ</text>
+              <text x="165" y="400" textAnchor="middle" fontSize="7" fill="#64748b">выход на улицу →</text>
 
-              {/* Trees suggestion */}
-              {[[350, 90],[360, 130],[345, 165],[355, 200]].map(([x,y],i) => (
+              {/* Зона за домом — двор */}
+              <text x="310" y="200" textAnchor="middle" fontSize="9" fill="#16a34a" fontWeight="700">ДВОР</text>
+              <text x="310" y="214" textAnchor="middle" fontSize="8" fill="#16a34a" opacity="0.8">сад / зона отдыха</text>
+
+              {/* Деревья по правой границе */}
+              {[[360,60],[370,110],[358,165],[368,220],[355,275]].map(([x,y],i) => (
                 <g key={i} transform={`translate(${x},${y})`}>
-                  <circle cy="-6" r="9" fill="#86efac" opacity="0.7" />
-                  <rect x="-2" y="3" width="4" height="7" fill="#92400e" opacity="0.5" />
+                  <circle cy="-8" r="11" fill="#86efac" opacity="0.65" />
+                  <rect x="-2" y="3" width="4" height="9" fill="#92400e" opacity="0.45" />
                 </g>
               ))}
-              <text x="352" y="238" fontSize="8" fill="#16a34a" textAnchor="middle" fontWeight="600">зелень</text>
+              <text x="365" y="315" fontSize="8" fill="#16a34a" textAnchor="middle">зелень</text>
 
-              {/* Parking suggestion */}
-              <rect x="82" y="298" width="55" height="30" rx="4" fill="#cbd5e1" opacity="0.7" stroke="#94a3b8" strokeWidth="1" />
-              <text x="109" y="317" textAnchor="middle" fontSize="8" fill="#475569" fontWeight="700">ПАРКОВКА</text>
+              {/* Парковка — у дороги, перед главным входом */}
+              <rect x="90" y="10" width="70" height="38" rx="4" fill="#cbd5e1" opacity="0.75" stroke="#94a3b8" strokeWidth="1.2" />
+              <text x="125" y="30" textAnchor="middle" fontSize="8" fill="#475569" fontWeight="700">ПАРКОВКА</text>
+              <text x="125" y="41" textAnchor="middle" fontSize="7" fill="#64748b">въезд с дороги</text>
 
-              {/* North arrow */}
-              <g transform="translate(390, 30)">
-                <circle cx="0" cy="0" r="18" fill="white" stroke="#e2e8f0" strokeWidth="1.5" />
-                <text x="0" y="-6" textAnchor="middle" fontSize="8" fill="#ef4444" fontWeight="800">С</text>
-                <text x="0" y="13" textAnchor="middle" fontSize="8" fill="#78716c">Ю</text>
-                <polygon points="0,-4 2,4 0,2 -2,4" fill="#ef4444" />
+              {/* Компас */}
+              <g transform="translate(430, 30)">
+                <circle cx="0" cy="0" r="20" fill="white" stroke="#e2e8f0" strokeWidth="1.5" />
+                <text x="0" y="-7" textAnchor="middle" fontSize="9" fill="#ef4444" fontWeight="800">С</text>
+                <text x="0" y="15" textAnchor="middle" fontSize="9" fill="#78716c">Ю</text>
+                <text x="12" y="4" textAnchor="middle" fontSize="8" fill="#78716c">В</text>
+                <text x="-12" y="4" textAnchor="middle" fontSize="8" fill="#78716c">З</text>
+                <polygon points="0,-6 2.5,4 0,2 -2.5,4" fill="#ef4444" />
               </g>
 
-              {/* Legend */}
-              <g transform="translate(10, 340)">
-                <rect width="12" height="8" rx="2" fill="#fefce8" stroke="#ca8a04" strokeWidth="1.5" strokeDasharray="3 2" />
-                <text x="16" y="8" fontSize="8" fill="#57534e">граница участка</text>
-                <rect x="110" width="12" height="8" rx="2" fill="#f0fdf4" stroke="#86efac" strokeWidth="1.5" strokeDasharray="3 2" />
-                <text x="126" y="8" fontSize="8" fill="#57534e">отступ 3 м</text>
-                <rect x="215" width="12" height="8" rx="2" fill="white" stroke="#292524" strokeWidth="1.5" />
-                <text x="231" y="8" fontSize="8" fill="#57534e">дом 6×12 м</text>
+              {/* Легенда */}
+              <g transform="translate(10,395)">
+                <rect width="10" height="8" rx="1" fill="#fecdd3" stroke="#be123c" strokeWidth="1" />
+                <text x="14" y="8" fontSize="7.5" fill="#57534e">спальни</text>
+                <rect x="68" width="10" height="8" rx="1" fill="#f5f5f4" stroke="#57534e" strokeWidth="1" />
+                <text x="82" y="8" fontSize="7.5" fill="#57534e">кухня-гостиная</text>
+                <rect x="180" width="10" height="8" rx="1" fill="#fde68a" stroke="#d97706" strokeWidth="1" />
+                <text x="194" y="8" fontSize="7.5" fill="#57534e">баня/санузел</text>
+                <rect x="275" width="10" height="8" rx="1" fill="#d4d4d4" />
+                <text x="289" y="8" fontSize="7.5" fill="#57534e">дорога</text>
               </g>
             </svg>
           </div>
         </div>
 
-        {/* Placement tips */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+        {/* Placement tips — updated for new orientation */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { icon: 'Navigation', color: 'text-blue-600', bg: 'bg-blue-50 border-blue-200', title: 'Ориентация', desc: 'Длинная ось дома (12 м) — вдоль левой границы, параллельно дороге. Фасад смотрит на дорогу.' },
-            { icon: 'Sun', color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200', title: 'Инсоляция', desc: 'Спальни — на южную сторону участка, кухня и баня — на северную. Максимум света в жилых комнатах.' },
-            { icon: 'Shield', color: 'text-green-600', bg: 'bg-green-50 border-green-200', title: 'Отступы', desc: 'От каждой границы — минимум 3 метра по нормам СНиП. Итого пятно застройки 6×12 м вписывается с запасом.' },
-            { icon: 'Car', color: 'text-slate-600', bg: 'bg-slate-50 border-slate-200', title: 'Въезд', desc: 'Парковка у нижнего края участка — въезд с дороги удобен, не перегораживает пространство перед домом.' },
+            { icon: 'Navigation', color: 'text-red-600', bg: 'bg-red-50 border-red-200', title: 'Вдоль красной линии', desc: 'Длинная ось дома (12 м) стоит вдоль красной границы — дороги. Фасад с входом смотрит на дорогу. Отступ 3 м.' },
+            { icon: 'BedDouble', color: 'text-rose-600', bg: 'bg-rose-50 border-rose-200', title: 'Спальни — к дороге', desc: 'Спальни в ближней к дороге части — вдоль красной линии. Окна выходят на тихую сторону участка (во двор).' },
+            { icon: 'Flame', color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200', title: 'Баня — в глубину', desc: 'Банный блок в дальней от дороги части. Выход из бани прямо в сад. Запах и пар не идут к соседям у дороги.' },
+            { icon: 'Car', color: 'text-slate-600', bg: 'bg-slate-50 border-slate-200', title: 'Парковка у въезда', desc: 'Парковка перед главным входом — у дороги. Гости паркуются без заезда вглубь участка.' },
           ].map((t, i) => (
             <div key={t.title} className={`rounded-2xl border-2 p-5 hover-lift animate-fade-up ${t.bg}`} style={{ animationDelay: `${0.08 * i}s` }}>
               <Icon name={t.icon} size={22} className={`${t.color} mb-3`} />
               <div className="font-display font-bold text-sm mb-1">{t.title}</div>
               <p className="text-xs text-muted-foreground leading-relaxed">{t.desc}</p>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 4 facades */}
+      <section id="facades" className="container pb-24">
+        <div className="max-w-2xl mb-8">
+          <h2 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight">Все стороны дома</h2>
+          <p className="mt-3 text-muted-foreground text-lg">Визуализация всех четырёх фасадов — как дом выглядит с каждой стороны.</p>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-6">
+          {[
+            { img: 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/40291cf4-5ec5-4623-8fab-dff417f1da48.jpg', title: 'Главный фасад', sub: 'Сторона дороги · главный вход по центру', badge: 'bg-green-100 text-green-800', badgeText: '🚪 Главный вход', dir: 'смотрит на дорогу' },
+            { img: 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/512a8838-d02c-41e2-aaea-ac695f688f32.jpg', title: 'Задний фасад', sub: 'Сторона двора · вид из сада', badge: 'bg-emerald-100 text-emerald-800', badgeText: '🌿 Вид на сад', dir: 'смотрит в глубь участка' },
+            { img: 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/a74cc542-682b-424c-b375-6a28bdedf8e9.jpg', title: 'Левый торец', sub: 'Крыло спален · окна в тихую сторону', badge: 'bg-rose-100 text-rose-800', badgeText: '🛏 Спальни', dir: '6 м — торцевая стена' },
+            { img: 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/41ada158-01b6-443f-93a7-a2f9bdd3df11.jpg', title: 'Правый торец', sub: 'Крыло бани · выход из сауны + бойлерная', badge: 'bg-amber-100 text-amber-800', badgeText: '🔥 Баня + бойлер', dir: '6 м — торцевая стена' },
+          ].map((f, i) => (
+            <article key={f.title} className="rounded-3xl overflow-hidden bg-white border border-border/60 hover-lift animate-fade-up" style={{ animationDelay: `${0.08 * i}s` }}>
+              <div className="relative h-56 overflow-hidden">
+                <img src={f.img} alt={f.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                <span className={`absolute top-3 left-3 text-xs font-bold px-3 py-1 rounded-full ${f.badge}`}>{f.badgeText}</span>
+              </div>
+              <div className="p-5">
+                <div className="font-display font-extrabold text-lg mb-1">{f.title}</div>
+                <div className="text-sm text-muted-foreground mb-1">{f.sub}</div>
+                <div className="text-xs font-semibold text-primary/70">↗ {f.dir}</div>
+              </div>
+            </article>
           ))}
         </div>
       </section>
