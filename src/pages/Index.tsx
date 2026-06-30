@@ -462,8 +462,8 @@ const Index = () => {
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
             <a href="#plan" className="hover:text-foreground transition-colors">Планировка</a>
-            <a href="#ergo" className="hover:text-foreground transition-colors">Эргономика</a>
-            <a href="#wings" className="hover:text-foreground transition-colors">Помещения</a>
+            <a href="#calc" className="hover:text-foreground transition-colors">Расчёт</a>
+            <a href="#plan2" className="hover:text-foreground transition-colors">Вариант 2</a>
             <a href="#site" className="hover:text-foreground transition-colors">Участок</a>
             <a href="#facades" className="hover:text-foreground transition-colors">Фасады</a>
             <a href="#cta" className="hover:text-foreground transition-colors">Заказать</a>
@@ -698,6 +698,361 @@ const Index = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── РАСЧЁТ МАТЕРИАЛОВ ── */}
+      <section id="calc" className="container pb-24">
+        <div className="max-w-2xl mb-10">
+          <h2 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight">Расчёт материалов</h2>
+          <p className="mt-3 text-muted-foreground text-lg">По фактическим габаритам: брус лафет 20×30×6000 мм, блоки сибит 20×30×60 см, высота стен 3 м.</p>
+        </div>
+
+        {/* Брус лафет */}
+        <div className="rounded-3xl bg-white border border-border/60 p-6 md:p-8 mb-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-11 h-11 rounded-xl bg-amber-100 flex items-center justify-center">
+              <Icon name="Trees" size={22} className="text-amber-700" />
+            </div>
+            <div>
+              <h3 className="font-display font-bold text-xl">Брус лафет · 20×30×6000 мм</h3>
+              <p className="text-sm text-muted-foreground">Боковые крылья: левое (спальни) + правое (баня/санузел/бойлерная)</p>
+            </div>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-2 pr-4 font-semibold text-muted-foreground">Стена</th>
+                  <th className="text-right py-2 px-4 font-semibold text-muted-foreground">Длина</th>
+                  <th className="text-right py-2 px-4 font-semibold text-muted-foreground">Рядов (h=3м)</th>
+                  <th className="text-right py-2 px-4 font-semibold text-muted-foreground">Брусьев в ряду</th>
+                  <th className="text-right py-2 pl-4 font-semibold text-muted-foreground">Итого шт.</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/50">
+                {[
+                  { wall: 'Левое крыло — 2 длинные (6 м)', len: '6 м', rows: 15, inRow: 1, total: 30, note: '' },
+                  { wall: 'Левое крыло — 2 торцевые (4 м)', len: '4 м', rows: 15, inRow: 1, total: 30, note: '4м < 6м → 1 брус с обрезкой' },
+                  { wall: 'Правое крыло — 2 длинные (6 м)', len: '6 м', rows: 15, inRow: 1, total: 30, note: '' },
+                  { wall: 'Правое крыло — 2 торцевые (4 м)', len: '4 м', rows: 15, inRow: 1, total: 30, note: '4м < 6м → 1 брус с обрезкой' },
+                  { wall: 'Внутренние перегородки крыльев', len: '4–6 м', rows: 15, inRow: 1, total: 45, note: '3 стены × 15 рядов' },
+                ].map((r, i) => (
+                  <tr key={i} className="hover:bg-secondary/30 transition-colors">
+                    <td className="py-3 pr-4 font-medium">{r.wall}{r.note && <span className="ml-2 text-xs text-amber-600">({r.note})</span>}</td>
+                    <td className="py-3 px-4 text-right text-muted-foreground">{r.len}</td>
+                    <td className="py-3 px-4 text-right text-muted-foreground">{r.rows}</td>
+                    <td className="py-3 px-4 text-right text-muted-foreground">{r.inRow}</td>
+                    <td className="py-3 pl-4 text-right font-display font-bold text-amber-700">{r.total}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="border-t-2 border-amber-200 bg-amber-50">
+                  <td colSpan={4} className="py-3 pr-4 font-display font-bold text-amber-800">Итого (чистый расчёт)</td>
+                  <td className="py-3 pl-4 text-right font-display font-extrabold text-2xl text-amber-700">165 шт.</td>
+                </tr>
+                <tr className="bg-amber-50/60">
+                  <td colSpan={4} className="pb-3 pr-4 text-sm text-amber-700">+ запас 10% на раскрой, брак, подгонку</td>
+                  <td className="pb-3 pl-4 text-right font-display font-extrabold text-xl text-amber-800">≈ 182 шт.</td>
+                </tr>
+                <tr className="bg-amber-50/60">
+                  <td colSpan={4} className="pb-3 pr-4 text-sm text-amber-600">Объём (1 брус = 0.02×0.30×6.0 = 0.036 м³)</td>
+                  <td className="pb-3 pl-4 text-right font-display font-bold text-amber-700">≈ 6.6 м³</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        {/* Блоки сибит */}
+        <div className="rounded-3xl bg-white border border-border/60 p-6 md:p-8 mb-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-11 h-11 rounded-xl bg-stone-100 flex items-center justify-center">
+              <Icon name="Brick" size={22} className="text-stone-600" fallback="Box" />
+            </div>
+            <div>
+              <h3 className="font-display font-bold text-xl">Блоки сибит · 20×30×60 см</h3>
+              <p className="text-sm text-muted-foreground">Центральная зона: кухня-гостиная 4×6 м, высота 3 м</p>
+            </div>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-2 pr-4 font-semibold text-muted-foreground">Стена</th>
+                  <th className="text-right py-2 px-4 font-semibold text-muted-foreground">Размер</th>
+                  <th className="text-right py-2 px-4 font-semibold text-muted-foreground">Блоков в ряду</th>
+                  <th className="text-right py-2 px-4 font-semibold text-muted-foreground">Рядов (h=3м / 0.2м)</th>
+                  <th className="text-right py-2 pl-4 font-semibold text-muted-foreground">Итого шт.</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/50">
+                {[
+                  { wall: '2 длинные стены (6 м)', size: '6×3 м', inRow: 10, rows: 15, total: 300, note: '6000/600=10 блоков' },
+                  { wall: '2 торцевые стены (4 м)', size: '4×3 м', inRow: 7, rows: 15, total: 210, note: '4000/600=6.7→7 блоков' },
+                  { wall: 'Минус проёмы (2 двери + 3 окна)', size: '—', inRow: -1, rows: -1, total: -75, note: '~75 блоков на проёмы' },
+                ].map((r, i) => (
+                  <tr key={i} className={`hover:bg-secondary/30 transition-colors ${r.total < 0 ? 'text-rose-600' : ''}`}>
+                    <td className="py-3 pr-4 font-medium">{r.wall}{r.note && <span className="ml-2 text-xs text-stone-500">({r.note})</span>}</td>
+                    <td className="py-3 px-4 text-right text-muted-foreground">{r.size}</td>
+                    <td className="py-3 px-4 text-right text-muted-foreground">{r.inRow > 0 ? r.inRow : '—'}</td>
+                    <td className="py-3 px-4 text-right text-muted-foreground">{r.rows > 0 ? r.rows : '—'}</td>
+                    <td className={`py-3 pl-4 text-right font-display font-bold ${r.total < 0 ? 'text-rose-600' : 'text-stone-700'}`}>{r.total > 0 ? r.total : r.total} шт.</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="border-t-2 border-stone-200 bg-stone-50">
+                  <td colSpan={4} className="py-3 pr-4 font-display font-bold text-stone-800">Итого (чистый расчёт)</td>
+                  <td className="py-3 pl-4 text-right font-display font-extrabold text-2xl text-stone-700">435 шт.</td>
+                </tr>
+                <tr className="bg-stone-50/60">
+                  <td colSpan={4} className="pb-3 pr-4 text-sm text-stone-600">+ запас 5% на бой и подрезку</td>
+                  <td className="pb-3 pl-4 text-right font-display font-extrabold text-xl text-stone-800">≈ 457 шт.</td>
+                </tr>
+                <tr className="bg-stone-50/60">
+                  <td colSpan={4} className="pb-3 pr-4 text-sm text-stone-500">Объём (1 блок = 0.2×0.3×0.6 = 0.036 м³)</td>
+                  <td className="pb-3 pl-4 text-right font-display font-bold text-stone-600">≈ 16.5 м³</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        {/* Итоговая сводка */}
+        <div className="grid sm:grid-cols-3 gap-4">
+          {[
+            { icon: 'Trees', bg: 'bg-amber-50 border-amber-200', iconBg: 'bg-amber-100', iconColor: 'text-amber-700', title: 'Брус лафет', value: '≈ 182 шт.', sub: '≈ 6.6 м³ · 20×30×6000 мм' },
+            { icon: 'Box', bg: 'bg-stone-50 border-stone-200', iconBg: 'bg-stone-100', iconColor: 'text-stone-600', title: 'Блоки сибит', value: '≈ 457 шт.', sub: '≈ 16.5 м³ · 20×30×60 см' },
+            { icon: 'TreePine', bg: 'bg-orange-50 border-orange-200', iconBg: 'bg-orange-100', iconColor: 'text-orange-700', title: 'Бревно каркас Ø48', value: 'по проекту', sub: 'рассчитывается конструктором' },
+          ].map((s, i) => (
+            <div key={s.title} className={`rounded-2xl border-2 p-5 hover-lift ${s.bg}`}>
+              <div className={`w-10 h-10 rounded-xl ${s.iconBg} flex items-center justify-center mb-3`}>
+                <Icon name={s.icon} size={20} className={s.iconColor} fallback="Box" />
+              </div>
+              <div className="font-display font-extrabold text-2xl mb-1">{s.value}</div>
+              <div className="font-semibold text-sm mb-1">{s.title}</div>
+              <div className="text-xs text-muted-foreground">{s.sub}</div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 text-xs text-muted-foreground">* Расчёт ориентировочный. Точное количество уточняется в рабочем проекте с учётом перемычек, утеплителя и способа кладки.</p>
+      </section>
+
+      {/* ── ВТОРОЙ ВАРИАНТ ПЛАНИРОВКИ ── */}
+      <section id="plan2" className="container pb-24">
+        <div className="max-w-2xl mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <Badge className="rounded-full bg-violet-100 text-violet-800 font-bold px-4 py-1">Вариант 2</Badge>
+          </div>
+          <h2 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight">Авторская планировка</h2>
+          <p className="mt-3 text-muted-foreground text-lg">Моё предложение по расстановке: спальни и баня поменяны крыльями — баня ближе к дороге скрыта забором, спальни глубоко в тишине.</p>
+        </div>
+
+        <div className="rounded-3xl bg-white border border-border/60 p-6 md:p-10 mb-8">
+          <div className="flex items-center gap-2 mb-6 text-sm font-semibold text-muted-foreground">
+            <Icon name="Lightbulb" size={18} className="text-violet-500" />
+            Вариант 2 · вид сверху · 6 × 12 м
+          </div>
+
+          <svg viewBox="0 0 960 520" className="w-full h-auto" style={{ fontFamily: 'Golos Text, sans-serif' }}>
+            <defs>
+              <pattern id="hs2" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="10" stroke="#a8a29e" strokeWidth="1.5" opacity="0.3" />
+              </pattern>
+              <pattern id="hl2" patternUnits="userSpaceOnUse" width="14" height="14">
+                <line x1="0" y1="0" x2="14" y2="0" stroke="#b45309" strokeWidth="1.2" opacity="0.18" />
+                <line x1="0" y1="7" x2="14" y2="7" stroke="#b45309" strokeWidth="1.2" opacity="0.18" />
+              </pattern>
+            </defs>
+
+            {/* Fills */}
+            {/* LEFT = БАНЯ/САНУЗЕЛ/БОЙЛЕР */}
+            <rect x={10} y={10} width={310} height={500} fill="#fef3c7" />
+            <rect x={10} y={10} width={310} height={500} fill="url(#hl2)" />
+            {/* CENTER = КУХНЯ-ГОСТИНАЯ */}
+            <rect x={320} y={10} width={320} height={500} fill="#f5f5f4" />
+            <rect x={320} y={10} width={320} height={500} fill="url(#hs2)" />
+            {/* RIGHT = СПАЛЬНИ */}
+            <rect x={640} y={10} width={310} height={500} fill="#fff1f2" />
+            <rect x={640} y={10} width={310} height={500} fill="url(#hl2)" />
+
+            {/* Outer walls */}
+            <rect x={0} y={0} width={960} height={520} fill="none" stroke="#292524" strokeWidth={20} rx="4" />
+
+            {/* Section dividers */}
+            <rect x={319} y={0} width={12} height={520} fill="#44403c" />
+            <rect x={639} y={0} width={12} height={520} fill="#44403c" />
+
+            {/* ── LEFT WING: БАНЯ ── */}
+            {/* Сауна верх */}
+            <rect x={15} y={15} width={160} height={230} rx="4" fill="#fde68a" opacity="0.65" />
+            <rect x={20} y={20} width={150} height={60} rx="3" fill="#fbbf24" opacity="0.4" />
+            <rect x={20} y={85} width={150} height={55} rx="3" fill="#fbbf24" opacity="0.35" />
+            <text x={95} y={125} textAnchor="middle" fontSize="11" fill="#92400e" fontWeight="800">САУНА</text>
+            <text x={95} y={139} textAnchor="middle" fontSize="8" fill="#b45309">~10 м²</text>
+            {/* печь */}
+            <rect x={40} y={155} width={40} height={40} rx="6" fill="#ef4444" opacity="0.55" stroke="#dc2626" strokeWidth="1.5" />
+            <text x={60} y={180} textAnchor="middle" fontSize="8" fill="#7f1d1d" fontWeight="700">ПЕЧЬ</text>
+
+            {/* Тамбур */}
+            <rect x={15} y={250} width={160} height={130} rx="4" fill="#fef9c3" opacity="0.8" />
+            <text x={95} y={305} textAnchor="middle" fontSize="10" fill="#92400e" fontWeight="800">ТАМБУР</text>
+            <text x={95} y={320} textAnchor="middle" fontSize="8" fill="#b45309">предбанник</text>
+            <rect x={25} y={340} width={140} height={18} rx="3" fill="#fbbf24" opacity="0.5" stroke="#d97706" strokeWidth="1" />
+            <text x={95} y={353} textAnchor="middle" fontSize="7.5" fill="#92400e">вешалка</text>
+
+            {/* Санузел */}
+            <rect x={175} y={15} width={135} height={260} rx="4" fill="#ccfbf1" opacity="0.75" />
+            <text x={243} y={95} textAnchor="middle" fontSize="10" fill="#0f766e" fontWeight="800">САНУЗЕЛ</text>
+            <text x={243} y={109} textAnchor="middle" fontSize="8" fill="#0d9488">проходной · ~6 м²</text>
+            <rect x={185} y={120} width={115} height={75} rx="5" fill="#99f6e4" opacity="0.55" stroke="#0d9488" strokeWidth="1.5" />
+            <circle cx={243} cy={157} r="22" fill="none" stroke="#0d9488" strokeWidth="2" strokeDasharray="4 3" />
+            <text x={243} y={161} textAnchor="middle" fontSize="9" fill="#0f766e" fontWeight="700">ДУШ</text>
+            <ellipse cx={225} cy={225} rx="20" ry="24" fill="#99f6e4" opacity="0.6" stroke="#0d9488" strokeWidth="1.5" />
+            <text x={225} y={229} textAnchor="middle" fontSize="8" fill="#0f766e" fontWeight="700">WC</text>
+
+            {/* Бойлерная низ */}
+            <rect x={15} y={385} width={300} height={125} rx="4" fill="#f1f5f9" opacity="0.8" />
+            <text x={165} y={450} textAnchor="middle" fontSize="11" fill="#475569" fontWeight="800">БОЙЛЕРНАЯ · ~8 м²</text>
+            <rect x={30} y={400} width={55} height={75} rx="8" fill="#94a3b8" opacity="0.7" stroke="#64748b" strokeWidth="1.5" />
+            <text x={57} y={443} textAnchor="middle" fontSize="8" fill="#1e293b" fontWeight="700">КОТЁЛ</text>
+            <rect x={100} y={405} width={40} height={60} rx="8" fill="#93c5fd" opacity="0.6" stroke="#3b82f6" strokeWidth="1.5" />
+            <text x={120} y={440} textAnchor="middle" fontSize="8" fill="#1e3a8a" fontWeight="700">БОЙЛЕР</text>
+
+            {/* LEFT labels */}
+            <text x={165} y={505} textAnchor="middle" fontSize="11" fill="#92400e" fontWeight="800">БАНЯ + САНУЗЕЛ + БОЙЛЕР</text>
+
+            {/* ── CENTER: КУХНЯ-ГОСТИНАЯ ── */}
+            {/* Панорамные окна — правая стена (напротив входа слева) */}
+            <rect x={940} y={100} width={20} height={80} fill="#bae6fd" opacity="0.9" stroke="#0284c7" strokeWidth="1.5" />
+            <rect x={940} y={210} width={20} height={80} fill="#bae6fd" opacity="0.9" stroke="#0284c7" strokeWidth="1.5" />
+            <rect x={940} y={320} width={20} height={80} fill="#bae6fd" opacity="0.9" stroke="#0284c7" strokeWidth="1.5" />
+            <text x={938} y={260} textAnchor="end" fontSize="8" fill="#0369a1" fontWeight="800" transform="rotate(-90, 938, 260)">◀ ПАНОРАМНЫЕ ОКНА · САД ▶</text>
+
+            {/* Гарнитур вдоль левой стены центра */}
+            <rect x={331} y={20} width={42} height={220} rx="5" fill="#d6d3d1" opacity="0.75" stroke="#a8a29e" strokeWidth="1.5" />
+            <rect x={337} y={28} width={28} height={28} rx="4" fill="#a8a29e" opacity="0.6" />
+            <circle cx={351} cy={42} r="8" fill="none" stroke="#78716c" strokeWidth="1.8" />
+            <rect x={337} y={74} width={28} height={28} rx="4" fill="#a8a29e" opacity="0.5" />
+            <circle cx={344} cy={82} r="4" fill="none" stroke="#78716c" strokeWidth="1.5" />
+            <circle cx={356} cy={82} r="4" fill="none" stroke="#78716c" strokeWidth="1.5" />
+            <circle cx={344} cy={93} r="4" fill="none" stroke="#78716c" strokeWidth="1.5" />
+            <circle cx={356} cy={93} r="4" fill="none" stroke="#78716c" strokeWidth="1.5" />
+            <text x={352} y={15} textAnchor="middle" fontSize="7.5" fill="#44403c" fontWeight="700">КУХНЯ</text>
+
+            {/* Обеденный стол */}
+            <rect x={390} y={190} width={130} height={75} rx="8" fill="#e7e5e4" opacity="0.75" stroke="#a8a29e" strokeWidth="1.5" />
+            <text x={455} y={232} textAnchor="middle" fontSize="10" fill="#44403c" fontWeight="700">СТОЛ</text>
+
+            {/* Диван — у правой стены (у панорамы) */}
+            <rect x={560} y={190} width={62} height={130} rx="8" fill="#d6d3d1" opacity="0.7" stroke="#a8a29e" strokeWidth="1.5" />
+            <text x={591} y={258} textAnchor="middle" fontSize="8" fill="#44403c" fontWeight="700">ДИВАН</text>
+
+            {/* Гардероб у входа */}
+            <rect x={335} y={390} width={90} height={100} rx="4" fill="#e9d5ff" opacity="0.75" stroke="#7c3aed" strokeWidth="1.5" />
+            <line x1={339} y1={405} x2={421} y2={405} stroke="#7c3aed" strokeWidth="2.5" opacity="0.7" />
+            {[345,365,385,405].map((x,i) => (
+              <g key={i}>
+                <line x1={x} y1={405} x2={x} y2={425} stroke="#7c3aed" strokeWidth="1.5" opacity="0.6" />
+                <ellipse cx={x} cy={427} rx="4" ry="6" fill="none" stroke="#7c3aed" strokeWidth="1.2" opacity="0.5" />
+              </g>
+            ))}
+            <text x={380} y={463} textAnchor="middle" fontSize="8" fill="#6d28d9" fontWeight="800">ГАРДЕРОБ</text>
+
+            {/* Вход слева */}
+            <rect x={0} y={220} width={20} height={50} fill="#f5f5f4" />
+            <path d="M 20 220 A 46 46 0 0 1 66 266" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeDasharray="5 3" />
+            <line x1={20} y1={220} x2={66} y2={220} stroke="#16a34a" strokeWidth="2.8" />
+            <text x={-6} y={250} textAnchor="middle" fontSize="10" fill="#15803d" fontWeight="800" transform="rotate(-90,-6,250)">ВХОД</text>
+
+            <text x={480} y={505} textAnchor="middle" fontSize="11" fill="#57534e" fontWeight="800">КУХНЯ-ГОСТИНАЯ · ~24 м²</text>
+
+            {/* ── RIGHT WING: СПАЛЬНИ ── */}
+            {/* Мастер-спальня */}
+            <rect x={651} y={15} width={299} height={250} rx="4" fill="#fff1f2" />
+            <rect x={660} y={20} width={105} height={70} rx="6" fill="#fda4af" opacity="0.65" stroke="#f43f5e" strokeWidth="1.5" />
+            <rect x={660} y={20} width={105} height={22} rx="4" fill="#f43f5e" opacity="0.5" />
+            <text x={712} y={62} textAnchor="middle" fontSize="9" fill="#9f1239" fontWeight="700">КРОВАТЬ</text>
+            {/* гардероб мастер */}
+            <rect x={780} y={20} width={160} height={35} rx="4" fill="#fed7aa" opacity="0.8" stroke="#ea580c" strokeWidth="1.2" />
+            <line x1={833} y1={20} x2={833} y2={55} stroke="#ea580c" strokeWidth="1" strokeDasharray="3 2" opacity="0.7" />
+            <line x1={886} y1={20} x2={886} y2={55} stroke="#ea580c" strokeWidth="1" strokeDasharray="3 2" opacity="0.7" />
+            <text x={860} y={41} textAnchor="middle" fontSize="8" fill="#9a3412" fontWeight="700">ГАРДЕРОБ</text>
+
+            <text x={800} y={200} textAnchor="middle" fontSize="12" fill="#be123c" fontWeight="800">МАСТЕР-СПАЛЬНЯ</text>
+            <text x={800} y={215} textAnchor="middle" fontSize="9" fill="#be123c" opacity="0.8">~16 м² · тихая сторона</text>
+
+            {/* Горизонтальная стена */}
+            <rect x={651} y={265} width={299} height={8} fill="#78716c" opacity="0.6" />
+
+            {/* Детская */}
+            <rect x={651} y={273} width={299} height={237} rx="4" fill="#eff6ff" />
+            <rect x={660} y={282} width={85} height={55} rx="6" fill="#93c5fd" opacity="0.65" stroke="#3b82f6" strokeWidth="1.5" />
+            <rect x={660} y={282} width={85} height={18} rx="4" fill="#3b82f6" opacity="0.5" />
+            <text x={702} y={318} textAnchor="middle" fontSize="9" fill="#1e3a8a" fontWeight="700">КРОВАТЬ</text>
+            {/* гардероб детская */}
+            <rect x={780} y={282} width={160} height={30} rx="4" fill="#bfdbfe" opacity="0.8" stroke="#3b82f6" strokeWidth="1.2" />
+            <line x1={833} y1={282} x2={833} y2={312} stroke="#3b82f6" strokeWidth="1" strokeDasharray="3 2" opacity="0.7" />
+            <text x={860} y={301} textAnchor="middle" fontSize="8" fill="#1d4ed8" fontWeight="700">ГАРДЕРОБ</text>
+            <rect x={660} y={350} width={80} height={38} rx="4" fill="#bae6fd" opacity="0.7" stroke="#0284c7" strokeWidth="1" />
+            <text x={700} y={374} textAnchor="middle" fontSize="8" fill="#075985" fontWeight="700">СТОЛ</text>
+
+            <text x={800} y={460} textAnchor="middle" fontSize="12" fill="#1d4ed8" fontWeight="800">ДЕТСКАЯ СПАЛЬНЯ</text>
+            <text x={800} y={475} textAnchor="middle" fontSize="9" fill="#1d4ed8" opacity="0.8">~14 м² · тихая сторона</text>
+            <text x={800} y={505} textAnchor="middle" fontSize="11" fill="#1d4ed8" fontWeight="800">СПАЛЬНИ</text>
+
+            {/* Компас */}
+            <g transform="translate(920, 35)">
+              <circle cx="0" cy="0" r="22" fill="white" stroke="#e2e8f0" strokeWidth="1.5" />
+              <text x="0" y="-7" textAnchor="middle" fontSize="9" fill="#ef4444" fontWeight="800">С</text>
+              <text x="0" y="15" textAnchor="middle" fontSize="9" fill="#78716c">Ю</text>
+              <polygon points="0,-5 2.5,4 0,2 -2.5,4" fill="#ef4444" />
+            </g>
+          </svg>
+
+          <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { color: 'bg-amber-200', label: 'Баня/сауна/тамбур' },
+              { color: 'bg-teal-200', label: 'Санузел проходной' },
+              { color: 'bg-stone-200', label: 'Кухня-гостиная' },
+              { color: 'bg-rose-200', label: 'Спальни (тихая зона)' },
+            ].map(l => (
+              <div key={l.label} className="flex items-center gap-2">
+                <span className={`w-4 h-4 rounded flex-shrink-0 ${l.color}`} />
+                <span className="text-xs text-muted-foreground font-medium">{l.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Сравнение вариантов */}
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="rounded-2xl border-2 border-primary/30 bg-secondary/40 p-6">
+            <div className="font-display font-bold text-lg mb-3 flex items-center gap-2">
+              <Badge className="bg-primary text-primary-foreground rounded-full">Вариант 1</Badge>
+              Ваш проект
+            </div>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li className="flex gap-2"><span className="text-rose-500">🛏</span> Спальни — левое крыло (у дороги)</li>
+              <li className="flex gap-2"><span className="text-amber-500">🔥</span> Баня — правое крыло (в глубине)</li>
+              <li className="flex gap-2"><span className="text-green-500">🚪</span> Вход с нижнего фасада по центру</li>
+              <li className="flex gap-2"><span className="text-sky-500">🪟</span> Панорама — задняя стена кухни</li>
+            </ul>
+          </div>
+          <div className="rounded-2xl border-2 border-violet-300 bg-violet-50 p-6">
+            <div className="font-display font-bold text-lg mb-3 flex items-center gap-2">
+              <Badge className="bg-violet-600 text-white rounded-full">Вариант 2</Badge>
+              Авторское предложение
+            </div>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li className="flex gap-2"><span className="text-amber-500">🔥</span> Баня — левое крыло (скрыта забором)</li>
+              <li className="flex gap-2"><span className="text-rose-500">🛏</span> Спальни — правое крыло (макс. тишина)</li>
+              <li className="flex gap-2"><span className="text-green-500">🚪</span> Вход сбоку — с левого торца</li>
+              <li className="flex gap-2"><span className="text-sky-500">🪟</span> Панорама — правая стена, вид на лес/поле</li>
+            </ul>
           </div>
         </div>
       </section>
