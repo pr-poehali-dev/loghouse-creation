@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 
-const EXTERIOR = 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/9dfc1472-c0dc-4568-95e7-9c5c0c630f71.jpg';
+const EXTERIOR = 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/197f7754-907f-466c-be00-dbc4870d483a.jpg';
 const INTERIOR = 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/917910b5-ee75-4c93-ba0c-013f7b70e5d8.jpg';
 const MASTER_BED = 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/f40ce406-6676-405d-a32c-6f3ed6abdd15.jpg';
 const SAUNA_IMG = 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/7efc4719-501c-4a64-bb8b-60d29ab2e4cf.jpg';
@@ -315,57 +315,61 @@ const FloorPlan = () => {
       {/* Подпись панорамных окон */}
       <text x={(LX + RX) / 2} y={-6} textAnchor="middle" fontSize="9" fill="#0369a1" fontWeight="800">◀ ПАНОРАМНЫЕ ОКНА · ВИД НА САД ▶</text>
 
-      {/* CENTER: кухонный гарнитур — у входной (нижней) стены */}
-      {/* Гарнитур вдоль нижней стены Y ≈ H-wall-42 */}
-      <rect x={LX + 8} y={H - wall - 46} width={RX - LX - 16} height={42} rx="5" fill="#d6d3d1" opacity="0.75" stroke="#a8a29e" strokeWidth="1.5" />
-      {/* Мойка */}
-      <rect x={LX + 50} y={H - wall - 44} width={30} height={30} rx="4" fill="#a8a29e" opacity="0.6" />
-      <circle cx={LX + 65} cy={H - wall - 29} r="8" fill="none" stroke="#78716c" strokeWidth="1.8" />
-      {/* Плита */}
-      <rect x={LX + 150} y={H - wall - 44} width={36} height={30} rx="4" fill="#a8a29e" opacity="0.5" />
-      <circle cx={LX + 161} cy={H - wall - 35} r="5" fill="none" stroke="#78716c" strokeWidth="1.5" />
-      <circle cx={LX + 175} cy={H - wall - 35} r="5" fill="none" stroke="#78716c" strokeWidth="1.5" />
-      <circle cx={LX + 161} cy={H - wall - 21} r="5" fill="none" stroke="#78716c" strokeWidth="1.5" />
-      <circle cx={LX + 175} cy={H - wall - 21} r="5" fill="none" stroke="#78716c" strokeWidth="1.5" />
-      <text x={(LX + RX) / 2} y={H - wall - 52} textAnchor="middle" fontSize="8" fill="#44403c" fontWeight="700">КУХОННЫЙ ГАРНИТУР + МОЙКА + ПЛИТА</text>
+      {/* ── ПРИХОЖАЯ — у входной (нижней) стены, свободная зона ── */}
+      {/* коврик у входа */}
+      <rect x={LX + 80} y={H - wall - 36} width={90} height={28} rx="6" fill="#bbf7d0" opacity="0.7" stroke="#16a34a" strokeWidth="1.2" strokeDasharray="4 2" />
+      <text x={LX + 125} y={H - wall - 18} textAnchor="middle" fontSize="8" fill="#15803d" fontWeight="700">ВХОД · прихожая</text>
 
-      {/* CENTER: обеденный стол — ближе к кухне */}
-      <rect x={LX + 55} y={H - wall - 160} width={120} height={70} rx="8" fill="#e7e5e4" opacity="0.75" stroke="#a8a29e" strokeWidth="1.5" />
-      <text x={LX + 115} y={H - wall - 120} textAnchor="middle" fontSize="10" fill="#44403c" fontWeight="700">СТОЛ</text>
-      {/* стулья */}
-      {[LX + 55, LX + 175].map((x, i) => (
-        [H - wall - 158, H - wall - 106].map((y, j) => <rect key={`c${i}-${j}`} x={x - 14} y={y} width={28} height={14} rx="4" fill="#c4b5a5" opacity="0.7" />)
-      ))}
-
-      {/* CENTER: диван — лицом к панорамным окнам (у верхней стены) */}
-      <rect x={LX + 30} y={wall + 28} width={RX - LX - 60} height={55} rx="8" fill="#d6d3d1" opacity="0.7" stroke="#a8a29e" strokeWidth="1.5" />
-      <text x={(LX + RX) / 2} y={wall + 60} textAnchor="middle" fontSize="10" fill="#44403c" fontWeight="700">ДИВАН</text>
-      <text x={(LX + RX) / 2} y={wall + 73} textAnchor="middle" fontSize="7.5" fill="#78716c">← лицом к панорамным окнам →</text>
-
-      {/* Стрелка: вход → панорамные окна */}
-      <line x1={(LX + RX) / 2} y1={H - 30} x2={(LX + RX) / 2} y2={100} stroke="#16a34a" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.5" />
-      <polygon points={`${(LX + RX) / 2},95 ${(LX + RX) / 2 - 6},108 ${(LX + RX) / 2 + 6},108`} fill="#16a34a" opacity="0.5" />
-      <text x={(LX + RX) / 2 + 8} y={300} fontSize="8" fill="#16a34a" fontWeight="600" transform={`rotate(-90, ${(LX + RX) / 2 + 8}, 300)`}>взгляд от входа</text>
-
-      {/* ── ГАРДЕРОБНАЯ ЗОНА — правый угол у входа (между кухней и баней) ── */}
-      {/* Ниша 80×90px вдоль правой стены центральной секции, снизу */}
-      <rect x={RX - 88} y={H - wall - 90} width={84} height={86} rx="4" fill="#e9d5ff" opacity="0.75" stroke="#7c3aed" strokeWidth="1.5" />
-      {/* штанга для одежды */}
-      <line x1={RX - 84} y1={H - wall - 75} x2={RX - 12} y2={H - wall - 75} stroke="#7c3aed" strokeWidth="2.5" opacity="0.7" />
-      {/* вешалки — крючки схематично */}
-      {[RX - 78, RX - 60, RX - 42, RX - 24].map((x, i) => (
+      {/* ── ГАРДЕРОБНАЯ ЗОНА — левый угол у входа (вдоль стены со спальнями) ── */}
+      <rect x={LX + 8} y={H - wall - 100} width={90} height={90} rx="4" fill="#e9d5ff" opacity="0.75" stroke="#7c3aed" strokeWidth="1.5" />
+      {/* штанга */}
+      <line x1={LX + 12} y1={H - wall - 85} x2={LX + 94} y2={H - wall - 85} stroke="#7c3aed" strokeWidth="2.5" opacity="0.7" />
+      {/* вешалки */}
+      {[LX + 18, LX + 36, LX + 54, LX + 72, LX + 90].map((x, i) => (
         <g key={i}>
-          <line x1={x} y1={H - wall - 75} x2={x} y2={H - wall - 52} stroke="#7c3aed" strokeWidth="1.5" opacity="0.6" />
-          <ellipse cx={x} cy={H - wall - 50} rx="5" ry="7" fill="none" stroke="#7c3aed" strokeWidth="1.2" opacity="0.5" />
+          <line x1={x} y1={H - wall - 85} x2={x} y2={H - wall - 62} stroke="#7c3aed" strokeWidth="1.5" opacity="0.6" />
+          <ellipse cx={x} cy={H - wall - 59} rx="5" ry="7" fill="none" stroke="#7c3aed" strokeWidth="1.2" opacity="0.5" />
         </g>
       ))}
       {/* полка снизу */}
-      <rect x={RX - 86} y={H - wall - 22} width={82} height={8} rx="2" fill="#7c3aed" opacity="0.25" />
-      <text x={RX - 46} y={H - wall - 96} textAnchor="middle" fontSize="8" fill="#6d28d9" fontWeight="800">ГАРДЕРОБ</text>
-      <text x={RX - 46} y={H - wall - 86} textAnchor="middle" fontSize="7" fill="#7c3aed" opacity="0.8">прихожая · ~4 м²</text>
+      <rect x={LX + 10} y={H - wall - 22} width={86} height={8} rx="2" fill="#7c3aed" opacity="0.25" />
+      <text x={LX + 53} y={H - wall - 106} textAnchor="middle" fontSize="8" fill="#6d28d9" fontWeight="800">ГАРДЕРОБ</text>
+      <text x={LX + 53} y={H - wall - 96} textAnchor="middle" fontSize="7" fill="#7c3aed" opacity="0.8">~4 м² · у стены</text>
+
+      {/* ── КУХОННЫЙ ГАРНИТУР — вдоль стены LX (у секции спален, П-образно) ── */}
+      {/* Гарнитур вдоль левой стены центральной зоны (x=LX+wall) */}
+      <rect x={LX + wall} y={wall + 20} width={42} height={200} rx="5" fill="#d6d3d1" opacity="0.75" stroke="#a8a29e" strokeWidth="1.5" />
+      {/* Мойка */}
+      <rect x={LX + wall + 6} y={wall + 28} width={28} height={28} rx="4" fill="#a8a29e" opacity="0.6" />
+      <circle cx={LX + wall + 20} cy={wall + 42} r="8" fill="none" stroke="#78716c" strokeWidth="1.8" />
+      {/* Плита */}
+      <rect x={LX + wall + 6} y={wall + 76} width={28} height={28} rx="4" fill="#a8a29e" opacity="0.5" />
+      <circle cx={LX + wall + 14} cy={wall + 84} r="4.5" fill="none" stroke="#78716c" strokeWidth="1.5" />
+      <circle cx={LX + wall + 26} cy={wall + 84} r="4.5" fill="none" stroke="#78716c" strokeWidth="1.5" />
+      <circle cx={LX + wall + 14} cy={wall + 96} r="4.5" fill="none" stroke="#78716c" strokeWidth="1.5" />
+      <circle cx={LX + wall + 26} cy={wall + 96} r="4.5" fill="none" stroke="#78716c" strokeWidth="1.5" />
+      <text x={LX + wall + 21} y={wall + 14} textAnchor="middle" fontSize="7.5" fill="#44403c" fontWeight="700" transform={`rotate(-90, ${LX + wall + 21}, ${wall + 130})`}>КУХОННЫЙ ГАРНИТУР</text>
+
+      {/* ── ОБЕДЕННЫЙ СТОЛ — по центру, между кухней и диваном ── */}
+      <rect x={LX + 80} y={H / 2 - 30} width={130} height={75} rx="8" fill="#e7e5e4" opacity="0.75" stroke="#a8a29e" strokeWidth="1.5" />
+      <text x={LX + 145} y={H / 2 + 10} textAnchor="middle" fontSize="10" fill="#44403c" fontWeight="700">СТОЛ</text>
+      {/* стулья */}
+      {[LX + 80, LX + 210].map((x, i) => (
+        [H / 2 - 28, H / 2 + 25].map((y, j) => <rect key={`c${i}-${j}`} x={x - 14} y={y} width={28} height={14} rx="4" fill="#c4b5a5" opacity="0.7" />)
+      ))}
+
+      {/* ── ДИВАН — у панорамных окон, лицом к ним ── */}
+      <rect x={LX + 30} y={wall + 24} width={RX - LX - 80} height={52} rx="8" fill="#d6d3d1" opacity="0.7" stroke="#a8a29e" strokeWidth="1.5" />
+      <text x={LX + 30 + (RX - LX - 80) / 2} y={wall + 54} textAnchor="middle" fontSize="10" fill="#44403c" fontWeight="700">ДИВАН</text>
+      <text x={LX + 30 + (RX - LX - 80) / 2} y={wall + 67} textAnchor="middle" fontSize="7" fill="#78716c">лицом к окнам →</text>
+
+      {/* Стрелка взгляда от входа к панораме */}
+      <line x1={LX + 190} y1={H - 28} x2={LX + 190} y2={100} stroke="#16a34a" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.4" />
+      <polygon points={`${LX + 190},96 ${LX + 184},110 ${LX + 196},110`} fill="#16a34a" opacity="0.4" />
+      <text x={LX + 200} y={310} fontSize="7.5" fill="#16a34a" fontWeight="600" transform={`rotate(-90, ${LX + 200}, 310)`}>взгляд от входа</text>
 
       {/* CENTER label */}
-      <text x={(LX + RX) / 2 - 30} y={H - 14} textAnchor="middle" fontSize="11" fill="#57534e" fontWeight="800">КУХНЯ-ГОСТИНАЯ · ~24 м²</text>
+      <text x={(LX + RX) / 2 - 10} y={H - 14} textAnchor="middle" fontSize="11" fill="#57534e" fontWeight="800">КУХНЯ-ГОСТИНАЯ · ~24 м²</text>
 
       {/* TAMBOUR: предбанник */}
       <text x={(RX + TX) / 2} y={80} textAnchor="middle" fontSize="9" fill="#92400e" fontWeight="800">ТАМБУР</text>
@@ -902,7 +906,7 @@ const Index = () => {
         </div>
         <div className="grid sm:grid-cols-2 gap-6">
           {[
-            { img: 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/40291cf4-5ec5-4623-8fab-dff417f1da48.jpg', title: 'Главный фасад', sub: 'Сторона дороги · главный вход по центру', badge: 'bg-green-100 text-green-800', badgeText: '🚪 Главный вход', dir: 'смотрит на дорогу' },
+            { img: 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/197f7754-907f-466c-be00-dbc4870d483a.jpg', title: 'Главный фасад', sub: 'Сторона дороги · главный вход по центру', badge: 'bg-green-100 text-green-800', badgeText: '🚪 Главный вход', dir: 'смотрит на дорогу' },
             { img: 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/512a8838-d02c-41e2-aaea-ac695f688f32.jpg', title: 'Задний фасад', sub: 'Сторона двора · вид из сада', badge: 'bg-emerald-100 text-emerald-800', badgeText: '🌿 Вид на сад', dir: 'смотрит в глубь участка' },
             { img: 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/a74cc542-682b-424c-b375-6a28bdedf8e9.jpg', title: 'Левый торец', sub: 'Крыло спален · окна в тихую сторону', badge: 'bg-rose-100 text-rose-800', badgeText: '🛏 Спальни', dir: '6 м — торцевая стена' },
             { img: 'https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/files/41ada158-01b6-443f-93a7-a2f9bdd3df11.jpg', title: 'Правый торец', sub: 'Крыло бани · выход из сауны + бойлерная', badge: 'bg-amber-100 text-amber-800', badgeText: '🔥 Баня + бойлер', dir: '6 м — торцевая стена' },
