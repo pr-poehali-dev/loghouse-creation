@@ -364,6 +364,7 @@ const Index = () => {
             <a href="#plan" className="hover:text-foreground transition-colors">Планировка</a>
             <a href="#ergo" className="hover:text-foreground transition-colors">Эргономика</a>
             <a href="#wings" className="hover:text-foreground transition-colors">Помещения</a>
+            <a href="#site" className="hover:text-foreground transition-colors">Участок</a>
             <a href="#cta" className="hover:text-foreground transition-colors">Заказать</a>
           </nav>
           <Button className="rounded-full font-semibold shadow-lg shadow-primary/25">
@@ -561,6 +562,163 @@ const Index = () => {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Site placement */}
+      <section id="site" className="container pb-24">
+        <div className="max-w-2xl mb-8">
+          <h2 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight">Посадка на участке</h2>
+          <p className="mt-3 text-muted-foreground text-lg">
+            Кадастровый номер <span className="font-bold text-foreground">22:65:012005:1113</span> · схема размещения дома 6×12 м.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-8 items-start">
+
+          {/* Cadastral photo */}
+          <div className="rounded-3xl overflow-hidden border border-border/60 shadow-xl shadow-primary/10 relative">
+            <img
+              src="https://cdn.poehali.dev/projects/f633a3e4-0401-4818-be66-0d3723ff7a1b/bucket/d7ebf358-f5e7-463f-ad35-ea10785fd6ff.jpg"
+              alt="Кадастровый снимок участка 22:65:012005:1113"
+              className="w-full object-cover"
+            />
+            <div className="absolute top-4 left-4 bg-black/60 backdrop-blur text-white text-xs font-bold px-3 py-1.5 rounded-full">
+              📍 22:65:012005:1113
+            </div>
+          </div>
+
+          {/* SVG placement scheme */}
+          <div className="rounded-3xl bg-white border border-border/60 p-6 shadow-xl shadow-primary/10">
+            <div className="flex items-center gap-2 mb-4 text-sm font-semibold text-muted-foreground">
+              <Icon name="MapPin" size={16} className="text-primary" />
+              Схема посадки дома на участок
+            </div>
+            <svg viewBox="0 0 420 380" className="w-full h-auto">
+              {/* Sky/ground bg */}
+              <rect width="420" height="380" fill="#f0fdf4" rx="12" />
+
+              {/* Road (diagonal, top-left) */}
+              <polygon points="0,80 60,0 90,0 30,80" fill="#d4d4d4" opacity="0.8" />
+              <polygon points="0,80 30,80 0,120" fill="#d4d4d4" opacity="0.6" />
+              <text x="18" y="55" fontSize="9" fill="#78716c" fontWeight="600" transform="rotate(-52, 18, 55)">ДОРОГА</text>
+
+              {/* Plot boundary (trapezoid matching photo shape) */}
+              <polygon
+                points="80,40 310,55 340,300 60,310"
+                fill="#fefce8"
+                stroke="#ca8a04"
+                strokeWidth="2.5"
+                strokeDasharray="8 4"
+              />
+
+              {/* Setback lines (3m offset) */}
+              <polygon
+                points="100,68 290,80 318,278 82,286"
+                fill="none"
+                stroke="#86efac"
+                strokeWidth="1.5"
+                strokeDasharray="5 4"
+                opacity="0.8"
+              />
+
+              {/* HOUSE rectangle (6×12м, rotated slightly to follow plot) */}
+              <g transform="translate(110, 95) rotate(3)">
+                {/* Shadow */}
+                <rect x="4" y="4" width="190" height="95" rx="6" fill="#000" opacity="0.08" />
+                {/* House body */}
+                <rect width="190" height="95" rx="6" fill="white" stroke="#292524" strokeWidth="2.5" />
+
+                {/* Left wing - bedrooms */}
+                <rect width="63" height="95" rx="4" fill="#fecdd3" opacity="0.6" />
+                <text x="31" y="40" textAnchor="middle" fontSize="8" fill="#be123c" fontWeight="700">СПАЛЬНИ</text>
+                <text x="31" y="52" textAnchor="middle" fontSize="7" fill="#be123c" opacity="0.8">лафет</text>
+
+                {/* Center - living */}
+                <rect x="63" width="64" height="95" fill="#e7e5e4" opacity="0.6" />
+                <text x="95" y="40" textAnchor="middle" fontSize="8" fill="#44403c" fontWeight="700">КУХНЯ</text>
+                <text x="95" y="52" textAnchor="middle" fontSize="8" fill="#44403c" fontWeight="700">ГОСТИНАЯ</text>
+                <text x="95" y="64" textAnchor="middle" fontSize="7" fill="#78716c" opacity="0.8">сибит</text>
+
+                {/* Right wing - sauna/tech */}
+                <rect x="127" width="63" height="95" rx="4" fill="#fde68a" opacity="0.6" />
+                <text x="159" y="38" textAnchor="middle" fontSize="8" fill="#92400e" fontWeight="700">БАНЯ</text>
+                <text x="159" y="50" textAnchor="middle" fontSize="7.5" fill="#92400e" fontWeight="700">САНУЗЕЛ</text>
+                <text x="159" y="62" textAnchor="middle" fontSize="7" fill="#92400e" fontWeight="700">БОЙЛЕР</text>
+                <text x="159" y="74" textAnchor="middle" fontSize="7" fill="#b45309" opacity="0.8">лафет</text>
+
+                {/* Internal dividers */}
+                <line x1="63" y1="0" x2="63" y2="95" stroke="#292524" strokeWidth="1.5" opacity="0.5" />
+                <line x1="127" y1="0" x2="127" y2="95" stroke="#292524" strokeWidth="1.5" opacity="0.5" />
+
+                {/* Main entrance arrow */}
+                <polygon points="95,95 88,115 102,115" fill="#16a34a" opacity="0.9" />
+                <text x="95" y="130" textAnchor="middle" fontSize="8" fill="#15803d" fontWeight="700">ВХОД</text>
+
+                {/* Sauna exterior exit */}
+                <polygon points="190,47 210,40 210,54" fill="#d97706" opacity="0.9" />
+                <text x="222" y="52" fontSize="7" fill="#d97706" fontWeight="700">выход</text>
+                <text x="222" y="61" fontSize="7" fill="#d97706" fontWeight="700">бани</text>
+
+                {/* Dimension labels */}
+                <text x="95" y="-8" textAnchor="middle" fontSize="9" fill="#57534e" fontWeight="700">12 м</text>
+                <text x="-14" y="52" textAnchor="middle" fontSize="9" fill="#57534e" fontWeight="700" transform="rotate(-90,-14,52)">6 м</text>
+              </g>
+
+              {/* Setback distance labels */}
+              <text x="88" y="86" fontSize="8" fill="#16a34a" fontWeight="600">↑ 3 м</text>
+              <text x="84" y="290" fontSize="8" fill="#16a34a" fontWeight="600">↓ 3 м</text>
+              <text x="328" y="190" fontSize="8" fill="#16a34a" fontWeight="600">→ 3 м</text>
+              <text x="62" y="200" fontSize="8" fill="#16a34a" fontWeight="600" transform="rotate(-90, 62, 200)">3 м →</text>
+
+              {/* Trees suggestion */}
+              {[[350, 90],[360, 130],[345, 165],[355, 200]].map(([x,y],i) => (
+                <g key={i} transform={`translate(${x},${y})`}>
+                  <circle cy="-6" r="9" fill="#86efac" opacity="0.7" />
+                  <rect x="-2" y="3" width="4" height="7" fill="#92400e" opacity="0.5" />
+                </g>
+              ))}
+              <text x="352" y="238" fontSize="8" fill="#16a34a" textAnchor="middle" fontWeight="600">зелень</text>
+
+              {/* Parking suggestion */}
+              <rect x="82" y="298" width="55" height="30" rx="4" fill="#cbd5e1" opacity="0.7" stroke="#94a3b8" strokeWidth="1" />
+              <text x="109" y="317" textAnchor="middle" fontSize="8" fill="#475569" fontWeight="700">ПАРКОВКА</text>
+
+              {/* North arrow */}
+              <g transform="translate(390, 30)">
+                <circle cx="0" cy="0" r="18" fill="white" stroke="#e2e8f0" strokeWidth="1.5" />
+                <text x="0" y="-6" textAnchor="middle" fontSize="8" fill="#ef4444" fontWeight="800">С</text>
+                <text x="0" y="13" textAnchor="middle" fontSize="8" fill="#78716c">Ю</text>
+                <polygon points="0,-4 2,4 0,2 -2,4" fill="#ef4444" />
+              </g>
+
+              {/* Legend */}
+              <g transform="translate(10, 340)">
+                <rect width="12" height="8" rx="2" fill="#fefce8" stroke="#ca8a04" strokeWidth="1.5" strokeDasharray="3 2" />
+                <text x="16" y="8" fontSize="8" fill="#57534e">граница участка</text>
+                <rect x="110" width="12" height="8" rx="2" fill="#f0fdf4" stroke="#86efac" strokeWidth="1.5" strokeDasharray="3 2" />
+                <text x="126" y="8" fontSize="8" fill="#57534e">отступ 3 м</text>
+                <rect x="215" width="12" height="8" rx="2" fill="white" stroke="#292524" strokeWidth="1.5" />
+                <text x="231" y="8" fontSize="8" fill="#57534e">дом 6×12 м</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        {/* Placement tips */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+          {[
+            { icon: 'Navigation', color: 'text-blue-600', bg: 'bg-blue-50 border-blue-200', title: 'Ориентация', desc: 'Длинная ось дома (12 м) — вдоль левой границы, параллельно дороге. Фасад смотрит на дорогу.' },
+            { icon: 'Sun', color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200', title: 'Инсоляция', desc: 'Спальни — на южную сторону участка, кухня и баня — на северную. Максимум света в жилых комнатах.' },
+            { icon: 'Shield', color: 'text-green-600', bg: 'bg-green-50 border-green-200', title: 'Отступы', desc: 'От каждой границы — минимум 3 метра по нормам СНиП. Итого пятно застройки 6×12 м вписывается с запасом.' },
+            { icon: 'Car', color: 'text-slate-600', bg: 'bg-slate-50 border-slate-200', title: 'Въезд', desc: 'Парковка у нижнего края участка — въезд с дороги удобен, не перегораживает пространство перед домом.' },
+          ].map((t, i) => (
+            <div key={t.title} className={`rounded-2xl border-2 p-5 hover-lift animate-fade-up ${t.bg}`} style={{ animationDelay: `${0.08 * i}s` }}>
+              <Icon name={t.icon} size={22} className={`${t.color} mb-3`} />
+              <div className="font-display font-bold text-sm mb-1">{t.title}</div>
+              <p className="text-xs text-muted-foreground leading-relaxed">{t.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
